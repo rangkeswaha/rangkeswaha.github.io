@@ -1,0 +1,13 @@
+.currency {
+    padding-left:12px;
+  }
+  
+.currency-symbol {
+position:absolute;
+padding: 10px 10px;
+}
+
+::placeholder {
+  color: black;
+  opacity: 1;
+}
