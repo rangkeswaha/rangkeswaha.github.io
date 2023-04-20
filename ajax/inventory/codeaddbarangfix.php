@@ -30,12 +30,12 @@
         
 
         $properties = [
-            'ngoods' => $namegoods,
-            'pgoods' => $pricegoods,
-            'sgoods' => $stockgoods,
-            'kgoods' => $kategori,
-            'dgoods' => htmlentities($_POST['formdeskripsi']),
-            'fgoods' => $filename,
+            'nama_barang' => $namegoods,
+            'harga_barang' => $pricegoods,
+            'stok_barang' => $stockgoods,
+            'kategori_barang' => $kategori,
+            'deskripsi_barang' => htmlentities($_POST['formdeskripsi']),
+            'foto_barang' => $filename,
         ];
 
         $ref_table = "inventory";

@@ -15,19 +15,19 @@ include "../import.php"; ?>
           var data = JSON.parse(isi);
           allbarang = data;
 
-          // alert(data[1].pgoods);
+          // alert(data[1].harga_barang);
           var str = '';
           for (var i = 0; i < data.length; i++){
             str += '<div class="col-md-3" onclick="detailbarang(\''+data[i].key+'\')">'+
               '<div class="card">'+
                 '<center>'+
                 '<br>'+
-                '<img src="/skripsi/apps/ajax/inventory/'+data[i].foto+'" alt="Avatar" style="width: 200px; height: 200px; border-radius: 15px;">'+
+                '<img src="/skripsi/apps/ajax/inventory/'+data[i].foto_barang+'" alt="Avatar" style="width: 200px; height: 200px; border-radius: 15px;">'+
                 '</center>'+
                 '<div class="container">'+
-                  '<h4><b>'+data[i].nama+'</b></h4> '+
-                  '<h4>Rp '+data[i].harga+' per kg</h4>'+
-                  '<p>Stok '+data[i].stok+'kg</p> '+
+                  '<h4><b>'+data[i].nama_barang+'</b></h4> '+
+                  '<h4>Rp '+data[i].harga_barang+' per kg</h4>'+
+                  '<p>Stok '+data[i].stok_barang+'kg</p> '+
                 '</div></div></div>';
           }
 
@@ -375,14 +375,14 @@ include "../import.php"; ?>
       for (var i = 0; i < allbarang.length; i++){
         if(allbarang[i].key == key){
           // alert(allbarang[i].halo);
-          document.getElementById("gambarbarangmodal").src= "/skripsi/apps/ajax/inventory/" + allbarang[i].foto;
-          document.getElementById('oldImage').value = allbarang[i].foto;
+          document.getElementById("gambarbarangmodal").src= "/skripsi/apps/ajax/inventory/" + allbarang[i].foto_barang;
+          document.getElementById('oldImage').value = allbarang[i].foto_barang;
           document.getElementById('keyBarang').value = allbarang[i].key;
-          document.getElementById('namegoods').value = allbarang[i].nama;
-          document.getElementById('pricegoods').value = allbarang[i].harga;
-          document.getElementById('stockgoods').value = allbarang[i].stok;
-          document.getElementById('formdeskripsi').value = allbarang[i].deskripsi;
-          document.getElementById(allbarang[i].kategori).selected = true;
+          document.getElementById('namegoods').value = allbarang[i].nama_barang;
+          document.getElementById('pricegoods').value = allbarang[i].harga_barang;
+          document.getElementById('stockgoods').value = allbarang[i].stok_barang;
+          document.getElementById('formdeskripsi').value = allbarang[i].deskripsi_barang;
+          document.getElementById(allbarang[i].kategori_barang).selected = true;
         }
       }
     }

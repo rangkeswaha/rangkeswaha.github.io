@@ -13,12 +13,12 @@ include "../import.php"; ?>
 			{
 				var data = JSON.parse(isi);
 
-                // alert(data[1].pgoods);
+                // alert(data[1].harga_barang);
                 var str = '';
                 for (var i = 0; i < data.length; i++){
-                    str += '<tr><td>'+data[i].ngoods+'</td>'+
-                    '<td>'+data[i].pgoods+'</td>'+
-                    '<td>'+data[i].sgoods+'</td></tr>';
+                    str += '<tr><td>'+data[i].nama_barang+'</td>'+
+                    '<td>'+data[i].harga_barang+'</td>'+
+                    '<td>'+data[i].stok_barang+'</td></tr>';
                 }
 
                 $("#listbarang").html(str);

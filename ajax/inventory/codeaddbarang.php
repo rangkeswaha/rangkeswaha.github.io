@@ -47,12 +47,12 @@
     }
 
     $postData = [
-        'ngoods' => $namegoods,
-        'pgoods' => $pricegoods,
-        'sgoods' => $stockgoods,
-        'kgoods' => $kategoribarang,
-        'dgoods' => $formdeskripsi,
-        'fgoods' => $target_file,
+        'nama_barang' => $namegoods,
+        'harga_barang' => $pricegoods,
+        'stok_barang' => $stockgoods,
+        'kategori_barang' => $kategoribarang,
+        'deskripsi_barang' => $formdeskripsi,
+        'foto_barang' => $target_file,
     ];
 
     // debug_to_console($filename);

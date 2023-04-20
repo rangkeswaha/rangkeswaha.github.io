@@ -33,12 +33,12 @@
                     $arr[$co] = array(
                         'key' => $key,
                         'halo' => $row['halo'],
-                        'deskripsi' => $row['dgoods'],
-                        'foto' => $row['fgoods'],
-                        'kategori' => $row['kgoods'],
-                        'nama' => $row['ngoods'],
-                        'harga' => $row['pgoods'],
-                        'stok' => $row['sgoods'],
+                        'deskripsi_barang' => $row['deskripsi_barang'],
+                        'foto_barang' => $row['foto_barang'],
+                        'kategori_barang' => $row['kategori_barang'],
+                        'nama_barang' => $row['nama_barang'],
+                        'harga_barang' => $row['harga_barang'],
+                        'stok_barang' => $row['stok_barang'],
                     );
                 }
             } 
@@ -46,12 +46,12 @@
                 $arr[$co] = array(
                     'key' => $key,
                     'halo' => "",
-                    'deskripsi' => $row['dgoods'],
-                    'foto' => $row['fgoods'],
-                    'kategori' => $row['kgoods'],
-                    'nama' => $row['ngoods'],
-                    'harga' => $row['pgoods'],
-                    'stok' => $row['sgoods'],
+                    'deskripsi_barang' => $row['deskripsi_barang'],
+                    'foto_barang' => $row['foto_barang'],
+                    'kategori_barang' => $row['kategori_barang'],
+                    'nama_barang' => $row['nama_barang'],
+                    'harga_barang' => $row['harga_barang'],
+                    'stok_barang' => $row['stok_barang'],
                 );
             }   
             $co++;
