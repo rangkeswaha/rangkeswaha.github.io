@@ -48,6 +48,53 @@ include "../import.php"; ?>
       });
     }
 
+    // function getbarangwithsearch(value) {
+    //   $.ajax({
+    //     url: "../ajax/inventory/getbarangandkey.php",
+    //     success:function(isi)
+    //     {
+    //       var data = JSON.parse(isi);
+    //       allbarang = data;
+
+    //       // alert(data[1].harga_barang);
+    //       var value = $(this).val();
+    //       alert(value);
+    //       var str = '';
+    //       for (var i = 0; i < data.length; i++){
+    //         if (data[i].nama_barang.toLowerCase().includes(value.toLowerCase())){
+    //           alert("masuk");
+    //           str += '<div class="col-md-3" onclick="detailbarang(\''+data[i].key+'\')">'+
+    //             '<div class="card">'+
+    //               '<center>'+
+    //               '<br>'+
+    //               '<img src="/skripsi/apps/ajax/inventory/'+data[i].foto_barang+'" alt="Avatar" style="width: 200px; height: 200px; border-radius: 15px;">'+
+    //               '</center>'+
+    //               '<div class="container">'+
+    //                 '<h4><b>'+data[i].nama_barang+'</b></h4> '+
+    //                 '<h4>Rp '+data[i].harga_barang+' per kg</h4>'+
+    //                 '<p>Stok '+data[i].stok_barang+'kg</p> '+
+    //               '</div></div></div>';
+    //         }
+    //         alert("tidak masuk");
+    //       }
+
+    //       // alert(data[1].nama);
+    //       // alert(str);
+          
+
+    //       $("#viewBarang").html(str);
+
+    //       // var str = '';
+    //       // str += '<option value="">Select Cabang</option>';    
+    //       // for(var i=0;i<data.length;i++){
+    //       // str += '<option value="'+data[i].kode_cabang+'_'+data[i].nama_cabang+'">'+ data[i].nama_cabang +'</option>';                 
+    //       // }
+    //       //     $("#selectCabang").html(str);
+    //       // }
+    //     }
+    //   });
+    // }
+
     // Get the button that opens the modal
     var btn = document.getElementById("myBtn");
 
@@ -99,7 +146,34 @@ include "../import.php"; ?>
     $(document).ready(function(){
         getbarang();
         getallkategorioption();
+
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            var str = '';
+            for (var i = 0; i < allbarang.length; i++){
+              if (allbarang[i].nama_barang.toLowerCase().includes(value.toLowerCase())){
+                str += '<div class="col-md-3" onclick="detailbarang(\''+allbarang[i].key+'\')">'+
+                  '<div class="card">'+
+                    '<center>'+
+                    '<br>'+
+                    '<img src="/skripsi/apps/ajax/inventory/'+allbarang[i].foto_barang+'" alt="Avatar" style="width: 200px; height: 200px; border-radius: 15px;">'+
+                    '</center>'+
+                    '<div class="container">'+
+                      '<h4><b>'+allbarang[i].nama_barang+'</b></h4> '+
+                      '<h4>Rp '+allbarang[i].harga_barang+' per kg</h4>'+
+                      '<p>Stok '+allbarang[i].stok_barang+'kg</p> '+
+                    '</div></div></div>';
+              }
+            }          
+            
+            if(str == ''){
+                str = '<div style="margin-top: 2.5%;"><center><h1>Data Tidak Ada</h1></center></div>';
+            }
+
+            $("#viewBarang").html(str);
+        });
     });
+
     document.onload = function () {
         getallkategorioption();
     };
@@ -211,6 +285,8 @@ include "../import.php"; ?>
                     <form action="../ajax/inventory/editdeletebarang.php" method="POST" enctype="multipart/form-data">
                         <div class="form-group">
                             <label class="form-label" style="font-size:20px; font-weight: bold; margin-bottom: 1%; margin-top: 1%;">Data Barang</label>
+                            <label>Pencarian Barang</label>
+                            <input style="border-radius: 10px;" class="form-control" id="myInput" type="text" placeholder="Nama barang"> 
                             <!-- The Modal -->
                             <div id="myModal" class="modal">
                               <!-- Modal content -->

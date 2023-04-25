@@ -55,8 +55,9 @@
                 <a href="javascript:;"> <i class="material-icons">inventory</i> <span
                         class="title">Stok Barang</span> <span class=" arrow"></span> </a>
                 <ul class="sub-menu">
-                    <li id="sidebar_history_master"> <a href="/skripsi/apps/inventory/tambahbarang.php">Tambah Barang Baru</a></li>
-                    <li id="sidebar_history_data_pegawai"> <a href="/skripsi/apps/inventory/stokbarang.php">Stok Barang</a></li>
+                    <li id="sidebar_tambah_barang_baru"> <a href="/skripsi/apps/inventory/tambahbarang.php">Tambah Barang Baru</a></li>
+                    <li id="sidebar_pembelian_stok"> <a href="/skripsi/apps/inventory/pembelianstok.php">Pembelian Stok</a></li>
+                    <li id="sidebar_stok_barang"> <a href="/skripsi/apps/inventory/stokbarang.php">Stok Barang</a></li>
                 </ul>
             </li>
             <!-- Laporan -->
