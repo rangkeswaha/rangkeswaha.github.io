@@ -7,6 +7,8 @@ include "../import.php"; ?>
 <script>
     // untuk membatasi grid yang ditampilkan
     // var defaultgrid = 5;
+    
+    var allbarang;
 
     function getbarang() {
       $.ajax({
@@ -49,6 +51,18 @@ include "../import.php"; ?>
       });
     }
 
+    function detailbarang(key){
+      sessionStorage.setItem("keystokbarang", key);
+      // alert('key telah tersimpan = ' + key);
+
+      for (var i = 0; i < allbarang.length; i++){
+        if(allbarang[i].key == key){
+          // alert(allbarang[i].halo);
+          document.getElementById('namegoods').value = allbarang[i].nama_barang;
+        }
+      }
+    }
+
     function getallkategorioption(){
         $.ajax({
           url: "../ajax/masterkategori/getallkategori.php",
@@ -79,6 +93,8 @@ include "../import.php"; ?>
     $(document).ready(function(){
         getbarang();
         getallkategorioption();
+
+        // $('#tabel-data').DataTable();
 
         $("#myInput").on("keyup", function() {
             var value = $(this).val().toLowerCase();
@@ -167,7 +183,7 @@ include "../import.php"; ?>
             <div class="grid simple form-grid">
                 <div class="grid-body no-border" style="border-radius: 10px;">
                     <br>
-                    <form action="../ajax/inventory/codepembelianbarang.php" method="POST" enctype="multipart/form-data">
+                    <form method="POST" id="pembelianbarang" enctype="multipart/form-data">
                         <div class="form-group">
                             <label class="form-label" style="font-size:20px; font-weight: bold; margin-bottom: 1%; margin-top: 1%;">Pilih Barang</label>
                             <label>Pencarian Barang</label>
@@ -186,8 +202,22 @@ include "../import.php"; ?>
                                         class="form-control" placeholder="Telur" value="">
                                 </div>
                                 <div class="col-md-4">
+                                    <label>Tanggal Pembelian</label>
+                                    <input name="buydategoods" id="buydategoods" type="date"
+                                        class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row form-row">
+                                <div class="col-md-6">
+                                    <label>Lama Pembelian</label>
+                                    <input name="buylengthgoods" id="buylengthgoods" type="number"
+                                        class="form-control" placeholder="Berapa hari" value="">
+                                </div>
+                                <div class="col-md-6">
                                     <label>Jumlah Stok (kg)</label>
-                                    <input name="stockgoods" id="stockgoods" type="text"
+                                    <input name="stockgoods" id="stockgoods" type="number"
                                         class="form-control" placeholder="10" value="">
                                 </div>
                             </div>
@@ -195,24 +225,38 @@ include "../import.php"; ?>
                         
                         <div class="form-group" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                             <div class="pull-right">
-                                <button type="submit" id="savebarangbutton" name="savebarangbutton" class="btn btn-danger btn-cons"><i class="icon-ok"></i>
+                                <button type="button" id="addbutton" name="addbutton" class="btn btn-success btn-cons"><i class="icon-ok"></i>
                                 Tambah</button>
                             </div>
                         </div>
+                        <br><br><br>
                         <!-- table list barang -->
-                        <div class="form-group">
-                            <table id="example" class='table - table-bordered table-stripped'>
-                                <thead>
-                                    <tr>
-                                        <th>Nama Barang</th>
-                                        <th>Harga Barang</th>
-                                        <th>Stok Barang</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="listbarang">
-                                    
-                                </tbody>
-                            </table>
+                        <table id="tabel-data" class="table table-striped table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Nama Barang</th>
+                                    <th>Tanggal Pembelian</th>
+                                    <th>Lama Pembelian</th>
+                                    <th>Stok Barang</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablegoods">
+                                <!-- <tr>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architect</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                        <div class="form-group" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                            <div>
+                                <center>
+                                <button type="submit" id="savebutton" name="savebutton" style="background-color: #53a551; color: white;" class="btn btn-cons"><i class="icon-ok"></i>
+                                Simpan Stok</button>
+                                </center>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -228,72 +272,122 @@ include "../import.php"; ?>
 
 
 <script>
+    var allnewstock = [];
 
-    // $('#savebarangbutton').click(function(){
-    //     var namegoods = $("#namegoods").val();
-    //     var stockgoods = $("#stockgoods").val();
-    //     var pricegoods = $("#pricegoods").val();
-    //     var selectKategori = $("#selectKategori").val();
-    //     var formdeskripsi = $("#formdeskripsi").val();
-    //     var fotobarang = $("#fotobarang").prop('files')[0];
-
-    //     var splitkategori = selectKategori.split("_");
-    //     var kategoribarang = splitkategori[0];
+    $('#addbutton').click(function(){
+          var namegoods = $("#namegoods").val();
+          var stockgoods = $("#stockgoods").val();
+          var buylengthgoods = $("#buylengthgoods").val();
+          var buydategoods = $("#buydategoods").val();
         
-    //     alert(namegoods);
+        // if(namegoods == "" && stockgoods == "" && buylengthgoods == "" && buydategoods == ""){
+        //   alert("Tolong Lengkapi Data Terlebih Dahulu")
+        // }else{
 
-    //     var form_data = new FormData();
-    //     form_data.append("namegoods", namegoods);
-    //     form_data.append("stockgoods", stockgoods);
-    //     form_data.append("pricegoods", pricegoods);
-    //     form_data.append("kategoribarang", kategoribarang);
-    //     form_data.append("formdeskripsi", formdeskripsi);
-    //     form_data.append("file", fotobarang);
+          // alert(allbarang[0].key);
 
-    //     // alert(form_data[0])
+          for (var i = 0; i < allbarang.length; i++){
+            if(namegoods == allbarang[i].nama_barang){
+              allnewstock.push({
+                  namegoods: namegoods,
+                  stockgoods: stockgoods,
+                  buylengthgoods: buylengthgoods,
+                  buydategoods: buydategoods,
+                  firststockgoods: allbarang[i].stok_barang,
+                  key: allbarang[i].key,
+              });
+            }
+          }
 
-    //     // $.ajax({
-    //     // url: "../ajax/inventory/codeaddbarang.php",
-    //     // type:"post",
-    //     // data:{
-    //     //     namegoods:namegoods,
-    //     //     stockgoods:stockgoods,
-    //     //     pricegoods:pricegoods,
-    //     //     formdeskripsi:formdeskripsi,
-    //     //     // fotobarang:fotobarang,
-    //     //     kategoribarang:kategoribarang,
-    //     // },
-    //     // success:function(isi)
-    //     // {
-    //     //     $('#example').DataTable().ajax.reload();
-    //     //     alert('Save Success');
-    //     // },
-    //     // error:function(err){
-    //     //     alert(err);
-    //     //     alert("err");
-    //     // }
-    //     // });
+          var str = "";
 
+          for (var i = 0; i < allnewstock.length; i++){
+            str += "<tr>"+
+            "<td>"+allnewstock[i].namegoods+"</td>"+
+            "<td>"+allnewstock[i].stockgoods+"</td>"+
+            "<td>"+allnewstock[i].buylengthgoods+"</td>"+
+            "<td>"+allnewstock[i].buydategoods+"</td>"+
+            "<td> <buttton id='del_"+i+"' class='btn btn-danger delStock'>Delete</button></td>"+
+            "</tr>";
+          }
+
+          // '<p>Stok '+data[i].stok_barang+'kg</p> '+
+          $("#tablegoods").html(str);
+        // }
+    });
+
+    // $(document).on("click",".savebutton",function(){
     //     $.ajax({
-    //     url: "../ajax/inventory/codeaddbarang.php",
-    //     type:"post",
-    //     data:{
-    //         form_data,
-    //     },
-    //     contentType: false,
-    //     processData: false,
-    //     success:function(isi)
-    //     {
-    //         // $('#example').DataTable().ajax.reload();
-    //         alert('Save Success');
-    //         alert(isi);
-    //     },
-    //     error:function(err){
-    //         alert(err);
-    //         alert("err");
-    //     }
+    //         url: '../ajax/inventory/codepembelianbarang.php',
+    //         type: 'POST',
+    //         data: { allnewstock:allnewstock },
+    //         success: function(response){
+    //             // alert(response);
+    //             // $(selected).closest('tr').fadeOut(800,function(){
+    //             //     $(this).remove();
+    //             // });
+    //             alert("Data Berhasil Disimpan");
+    //         },
+    //         error: function(a, err){
+    //             //lakukan sesuatu untuk handle error
+    //             alert("Data Gagal Disimpan");
+    //         }
     //     });
     // });
+
+    $(document).ready(function() {
+      $('#pembelianbarang').submit(function(event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        var allnewdata = JSON.stringify(allnewstock);
+        $.ajax({
+          type: 'POST',
+          url: '../ajax/inventory/codepembelianbarang.php',
+          data: { allnewdata:allnewdata },
+          success: function(response) {
+            // console.log(response);
+            alert("Data Berhasil Disimpan");
+            allnewstock.length = 0;
+            var str = "";
+            $("#tablegoods").html(str);
+          },
+          error: function(a, err){
+              //lakukan sesuatu untuk handle error
+              alert("Data Gagal Disimpan");
+          },
+        });
+      });
+    });
+
+    $(document).on("click",".delStock",function(){
+        var selected = this;
+        var id = this.id;
+        // alert(id);
+
+        var split = id.split("_");
+
+        // alert(split);
+
+        kategoriawal = split[0];
+        rownumber = split[1];
+
+        allnewstock.splice(rownumber, 1);
+
+        var str = "";
+
+        for (var i = 0; i < allnewstock.length; i++){
+          str += "<tr>"+
+          "<td>"+allnewstock[i].namegoods+"</td>"+
+          "<td>"+allnewstock[i].stockgoods+"</td>"+
+          "<td>"+allnewstock[i].buylengthgoods+"</td>"+
+          "<td>"+allnewstock[i].buydategoods+"</td>"+
+          "<td> <buttton id='del_"+i+"' class='btn btn-danger delStock'>Delete</button></td>"+
+          "</tr>";
+        }
+
+        $("#tablegoods").html(str);
+        
+    });
 
     (function($) {
     $.fn.currencyInput = function() {

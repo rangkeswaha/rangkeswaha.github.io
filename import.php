@@ -106,5 +106,8 @@
 
     <!-- <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="http://netdna.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> -->
+
+    <!-- <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script> -->
         
     <!-- END JAVASCRIPTS -->

@@ -4,89 +4,147 @@
 
     // echo 'diluar first';
 
-    if(isset($_POST['editBarang'])){
+    // if(isset($_POST['editBarang'])){
 
         // echo 'didalem first';
-        $namegoods = $_POST["namegoods"];
-        $pricegoods = $_POST["pricegoods"];
-        $stockgoods = $_POST["stockgoods"];
-        $kategoribarang = $_POST["selectKategori"];
-        $splitkategori = explode("_", $kategoribarang);
-        $kategori = $splitkategori[0];
-        $formdeskripsi = htmlentities($_POST['formdeskripsi']);
-        $fotobarang = $_FILES["fotobarang"]['name'];
-        $oldfoto = $_POST["oldImage"];
-        $keyawal = $_POST["keyBarang"];
-        // echo $oldfoto;
+        // $namegoods = $_POST["namegoods"];
+        // $buylengthgoods = $_POST["buylengthgoods"];
+        // $stockgoods = $_POST["stockgoods"];
+        // $buydategoods = $_POST["buydategoods"];
+        $allnewdata = $_POST["allnewdata"];
+        $data = json_decode($allnewdata, true);
+       
+        // $data = [
+        //     [
+        //         'name' => 'morty',
+        //         'age' => 15
+        //     ],
+        //     [
+        //         'name' => 'rick',
+        //         'age' => 70
+        //     ]
+        // ];
+        // echo $allnewstock[0]['key'];
         // echo $fotobarang;
         // echo $key;
         // echo $_POST['formdeskripsi'];
         // echo htmlentities($_POST['formdeskripsi']);;
 
-        if ($fotobarang != NULL){
+        // for($i = 0; $i < count($data); $i++){
+        //     $properties = [
+        //         'lama_pembelian' => $data[$i]['name'],
+        //         'tanggal_pembelian' => $data[$i]['age'],
+        //         // 'jumlah_barang' => $array[$i]['stockgoods'],
+        //     ];
+    
+        //     $ref_table = "Pembelian_stok";
+        //     $postRef_result = $database->getReference($ref_table)->push($properties);
+        // }
+        // echo json_encode($data[0]['buydategoods']);
+        $allnewkeys = array();
 
-            $uid = $keyawal;
-
-            $random_no = rand(1111,9999);
-
-            $new_image = $random_no.$fotobarang;
-
-            $filename = 'uploads/' .$new_image;
-
-
-            $postData = [
-                'nama_barang' => $namegoods,
-                'harga_barang' => $pricegoods,
-                'stok_barang' => $stockgoods,
-                'kategori_barang' => $kategori,
-                'deskripsi_barang' => htmlentities($_POST['formdeskripsi']),
-                'foto_barang' => $filename,
+        for($i = 0; $i < count((array)$data); $i++){
+            $properties = [
+                'lama_pembelian' => $data[$i]['buylengthgoods'],
+                'tanggal_pembelian' => $data[$i]['buydategoods'],
+                'jumlah_barang' => $data[$i]['stockgoods'],
             ];
+    
+            $ref_table = "Pembelian_stok";
+            $postRef_result = $database->getReference($ref_table)->push($properties);
 
-            // Create a key for a new post
-            $newPostKey = $database->getReference('inventory')->push()->getKey();
+            // $newPostKey = $newPostRef->getKey();
+            // array_push($allnewkeys, array(
+            //     'key_pembelian' => $newPostRef->getKey(),
+            //     'key_barang' => $data[$i]['key'],
+            // ));
 
-            $updates = [
-                'inventory/'.$uid => $postData,
-                // 'mkategori/'.$uid.'/'.$newPostKey => $postData,
-            ];
+            $uid = $data[$i]['key'];
 
-            $database->getReference() // this is the root reference
-                ->update($updates);
-            echo ("Barang Berhasil Diganti");
+            $totalstock = $data[$i]['firststockgoods'] + $data[$i]['stockgoods'];
 
-            move_uploaded_file($_FILES['fotobarang']['tmp_name'], "uploads/". $new_image);
+            $ref = $database->getReference('inventory');
 
-            header("Location: ../../inventory/stokbarang.php");
+            $ref->getChild($uid)->update(['stok_barang' => $totalstock]);
 
-        }else{
-            $uid = $keyawal;
+            // $postData = [
+            //     'stok_barang' => $stockgoods,
+            // ];
 
-            $postData = [
-                'nama_barang' => $namegoods,
-                'harga_barang' => $pricegoods,
-                'stok_barang' => $stockgoods,
-                'kategori_barang' => $kategori,
-                'deskripsi_barang' => htmlentities($_POST['formdeskripsi']),
-                'foto_barang' => $oldfoto,
-            ];
+            // $newPostKey = $database->getReference('inventory')->push()->getKey();
 
-            // Create a key for a new post
-            $newPostKey = $database->getReference('inventory')->push()->getKey();
+            // $updates = [
+            //     'inventory/'.$uid => $postData,
+            // ];
 
-            $updates = [
-                'inventory/'.$uid => $postData,
-                // 'mkategori/'.$uid.'/'.$newPostKey => $postData,
-            ];
-
-            $database->getReference() // this is the root reference
-                ->update($updates);
-            echo ("Barang Berhasil Diganti");
-
-            header("Location: ../../inventory/stokbarang.php");
-
+            // $database->getReference() // this is the root reference
+            //     ->update($updates);
         }
 
-    }
+        // if ($fotobarang != NULL){
+
+        //     $uid = $keyawal;
+
+        //     $random_no = rand(1111,9999);
+
+        //     $new_image = $random_no.$fotobarang;
+
+        //     $filename = 'uploads/' .$new_image;
+
+
+        //     $postData = [
+        //         'nama_barang' => $namegoods,
+        //         'harga_barang' => $pricegoods,
+        //         'stok_barang' => $stockgoods,
+        //         'kategori_barang' => $kategori,
+        //         'deskripsi_barang' => htmlentities($_POST['formdeskripsi']),
+        //         'foto_barang' => $filename,
+        //     ];
+
+        //     // Create a key for a new post
+        //     $newPostKey = $database->getReference('inventory')->push()->getKey();
+
+        //     $updates = [
+        //         'inventory/'.$uid => $postData,
+        //         // 'mkategori/'.$uid.'/'.$newPostKey => $postData,
+        //     ];
+
+        //     $database->getReference() // this is the root reference
+        //         ->update($updates);
+        //     echo ("Barang Berhasil Diganti");
+
+        //     move_uploaded_file($_FILES['fotobarang']['tmp_name'], "uploads/". $new_image);
+
+        //     header("Location: ../../inventory/stokbarang.php");
+
+        // }else{
+        //     $uid = $keyawal;
+
+        //     $postData = [
+        //         'nama_barang' => $namegoods,
+        //         'harga_barang' => $pricegoods,
+        //         'stok_barang' => $stockgoods,
+        //         'kategori_barang' => $kategori,
+        //         'deskripsi_barang' => htmlentities($_POST['formdeskripsi']),
+        //         'foto_barang' => $oldfoto,
+        //     ];
+
+        //     // Create a key for a new post
+        //     $newPostKey = $database->getReference('inventory')->push()->getKey();
+
+        //     $updates = [
+        //         'inventory/'.$uid => $postData,
+        //         // 'mkategori/'.$uid.'/'.$newPostKey => $postData,
+        //     ];
+
+        //     $database->getReference() // this is the root reference
+        //         ->update($updates);
+        //     echo ("Barang Berhasil Diganti");
+
+        //     header("Location: ../../inventory/stokbarang.php");
+
+        // }
+
+    // }
 
 ?>
