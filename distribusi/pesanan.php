@@ -152,7 +152,7 @@ include "../import.php"; ?>
             <div class="grid simple form-grid">
                 <div class="grid-body no-border" style="border-radius: 10px;">
                     <br>
-                    <form action="../ajax/inventory/editdeletebarang.php" method="POST" enctype="multipart/form-data">
+                    <form action="#" method="POST" enctype="multipart/form-data">
                         <div class="form-group">
                             <!-- <div style="display: flex;"> -->
                             <label class="form-label" style="font-size:20px; font-weight: bold; margin-top: 1%;">Data Tempat</label>

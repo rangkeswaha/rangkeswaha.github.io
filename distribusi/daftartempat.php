@@ -6,6 +6,14 @@ include "../import.php"; ?>
 <link rel="stylesheet" href="../inventory/tambahbarang.css">
 
 <style>
+    #map {
+        height: 400px;
+        width: 100%;
+    }
+    #mapModal {
+        height: 400px;
+        width: 100%;
+    }
     #gambartooltip {
         width:100%;
         height:100%;
@@ -236,6 +244,20 @@ include "../import.php"; ?>
                                     </div>
                                 </div>
                             </div>
+                            <!-- map di modal masih error karena memakai 2 map di satu page -->
+                            <!-- <div class="form-group">
+                                <div class="row form-row">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Tempat Berdasarkan Map</label>
+                                        <br>
+                                        <input type="text" id="address-inputModal">
+                                        <button type="button" onclick="geocodeAddressModal()">Check Place</button>
+                                        <div id="mapModal"></div>
+                                        
+                                        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5yreJhIC-v-FDNOf1RFZ1C46y7bgAwLw&libraries=places&callback=initMapModal"></script>
+                                    </div>
+                                </div>
+                            </div> -->
                             <div class="form-group">
                                 <div class="pull-right">
                                     <button type="submit" id="editTempat" name="editTempat" class="btn btn-success btn-cons"><i class="icon-ok"></i>
@@ -246,6 +268,7 @@ include "../import.php"; ?>
                             </div>
                         </div>
                     </div>
+                    <!-- end modal -->
                     <form id="formDaftarTempat">
                         <div class="form-group">
                             <label class="form-label" style="font-size:20px; font-weight: bold; margin-bottom: 1%; margin-top: 1%;">Data Tempat</label>
@@ -282,6 +305,19 @@ include "../import.php"; ?>
                         <div class="form-group">
                             <div class="row form-row">
                                 <div class="col-md-12">
+                                    <label class="form-label">Tempat Berdasarkan Map</label>
+                                    <br>
+                                    <input type="text" id="address-input">
+                                    <button type="button" onclick="geocodeAddress()">Check Place</button>
+                                    <div id="map"></div>
+                                    <!-- Load the Google Maps JavaScript API asynchronously -->
+                                    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5yreJhIC-v-FDNOf1RFZ1C46y7bgAwLw&libraries=places&callback=initMap"></script>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row form-row">
+                                <div class="col-md-12">
                                     <!-- BEGIN TAG INPUTS / FILE UPLOADER CONTROLS-->
                                     <label style="display: flex; font-size: 17px;" class="form-label">Gambar Barang <label style="padding-left: 2px; font-size: 13px;">(opsional)</label></label>
                                     <div class="fallback">
@@ -294,8 +330,8 @@ include "../import.php"; ?>
                         
                         <div class="form-group" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                             <div class="pull-right">
-                                <button type="button" id="saveTempat" name="saveTempat" class="btn btn-danger btn-cons"><i class="icon-ok"></i>
-                                SAVE</button>
+                                <button type="button" id="saveTempat" name="saveTempat" class="btn btn-success btn-cons"><i class="icon-ok"></i>
+                                Simpan Tempat</button>
                             </div>
                         </div>
                         <!-- table list tempat distribusi -->
@@ -334,40 +370,95 @@ include "../import.php"; ?>
 
 
 <script>
-
+    var savelongitude;
+    var savelatitude;
+    var savedetail_address;
 
     $('#saveTempat').click(function(){
-        var nama = $("#namePlace").val();
-        var alamat = $("#addressPlace").val();
-        var deskripsi = $("#deskripsiTempat").val();
-        var foto = $("#fotoTempat")[0].files;
-    
+        //to grab longitude, latitude and detail address
+        // Get the address input element
+        const addressInput = document.getElementById('address-input');
 
-        var form_data = new FormData();
-        form_data.append("nama", nama);
-        form_data.append("alamat", alamat);
-        form_data.append("deskripsi", deskripsi);
-        form_data.append("namafoto", foto[0]);
+        // Geocode the entered address
+        geocoder.geocode({ address: addressInput.value }, (results, status) => {
+            if (status === 'OK') {
+            // Center the map on the geocoded location
+            map.setCenter(results[0].geometry.location);
+            map.setZoom(16);
 
-        $.ajax({
-            url:"../ajax/tempatdistribusi/addtempatdis.php",
-            type:"post",
-            data:form_data,
-            contentType: false,
-            processData: false,
-            success:function(res){
-                // console.log(res);
-                
-                // alert(res);
+            // Remove any existing marker from the map
+            if (marker) {
+                marker.setMap(null);
+            }
 
-                alert("Data Tempat Telah Disimpan");
+            // Create a new marker at the geocoded location
+            marker = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location,
+                draggable: true
+            });
 
-                $('#example').DataTable().ajax.reload();
-                // window.location.replace("profile.php");
-            },
-            error:function(err){
-                alert(err);
-                alert("err");
+            // When the user drags the marker, update the address input with the new location
+            marker.addListener('dragend', () => {
+                geocoder.geocode({ location: marker.getPosition() }, (results, status) => {
+                    if (status === 'OK') {
+                        if (results[0]) {
+                        document.getElementById('address-input').value = results[0].formatted_address;
+                        }
+                    }
+                });
+            });
+
+            // Get the latitude, longitude, and formatted address of the geocoded location
+            const latitude = results[0].geometry.location.lat();
+            const longitude = results[0].geometry.location.lng();
+            const formattedAddress = results[0].formatted_address;
+
+            // Display the latitude, longitude, and formatted address in an alert
+            // alert(`Latitude: ${latitude}\nLongitude: ${longitude}\nAddress: ${formattedAddress}`);
+
+            savelatitude = latitude;
+            savelongitude = longitude;
+            savedetail_address = formattedAddress;
+
+            var nama = $("#namePlace").val();
+            var alamat = $("#addressPlace").val();
+            var deskripsi = $("#deskripsiTempat").val();
+            var foto = $("#fotoTempat")[0].files;
+        
+
+            var form_data = new FormData();
+            form_data.append("nama", nama);
+            form_data.append("alamat", alamat);
+            form_data.append("deskripsi", deskripsi);
+            form_data.append("namafoto", foto[0]);
+            form_data.append("savelatitude", savelatitude);
+            form_data.append("savelongitude", savelongitude);
+            form_data.append("savedetail_address", savedetail_address);
+
+            $.ajax({
+                url:"../ajax/tempatdistribusi/addtempatdis.php",
+                type:"post",
+                data:form_data,
+                contentType: false,
+                processData: false,
+                success:function(res){
+                    // console.log(res);
+                    
+                    // alert(res);
+
+                    alert("Data Tempat Telah Disimpan");
+
+                    $('#example').DataTable().ajax.reload();
+                    // window.location.replace("profile.php");
+                },
+                error:function(err){
+                    alert(err);
+                    alert("err");
+                }
+            });
+            } else {
+                alert('Masukan Alamat');
             }
         });
     });
@@ -540,3 +631,222 @@ include "../import.php"; ?>
   cursor: pointer;
 }
 </style>
+
+<!-- Google API -->
+<!-- AIzaSyC5yreJhIC-v-FDNOf1RFZ1C46y7bgAwLw -->
+
+<!-- Script for the map on page -->
+<script>
+    let map;
+    let geocoder;
+    let marker;
+
+    function initMap() {
+        // Create a new map centered on Indonesia
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: -0.7893, lng: 113.9213 },
+            zoom: 6
+        });
+
+        // Create a new geocoder
+        geocoder = new google.maps.Geocoder();
+
+        // Create a new autocomplete object for the address input
+        autocomplete = new google.maps.places.Autocomplete(
+            document.getElementById('address-input'),
+            { types: ['geocode'] }
+        );
+
+        // When the user selects an address from the autocomplete dropdown
+        autocomplete.addListener('place_changed', () => {
+            // Get the selected place from the autocomplete object
+            const place = autocomplete.getPlace();
+
+            // If the place has a geometry object, center the map on it and add a marker
+            if (place.geometry) {
+            map.setCenter(place.geometry.location);
+            map.setZoom(16);
+
+            // Remove any existing marker from the map
+            if (marker) {
+                marker.setMap(null);
+            }
+
+            // Create a new marker at the selected location
+            marker = new google.maps.Marker({
+                map: map,
+                position: place.geometry.location,
+                draggable: true
+            });
+
+            // When the user drags the marker, update the address input with the new location
+            marker.addListener('dragend', () => {
+                geocoder.geocode({ location: marker.getPosition() }, (results, status) => {
+                if (status === 'OK') {
+                    if (results[0]) {
+                    document.getElementById('address-input').value = results[0].formatted_address;
+                    }
+                }
+                });
+            });
+            }
+        });
+    }
+
+    // Define the geocodeAddress function
+    function geocodeAddress() {
+        // Get the address input element
+        const addressInput = document.getElementById('address-input');
+
+        // Geocode the entered address
+        geocoder.geocode({ address: addressInput.value }, (results, status) => {
+            if (status === 'OK') {
+            // Center the map on the geocoded location
+            map.setCenter(results[0].geometry.location);
+            map.setZoom(16);
+
+            // Remove any existing marker from the map
+            if (marker) {
+                marker.setMap(null);
+            }
+
+            // Create a new marker at the geocoded location
+            marker = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location,
+                draggable: true
+            });
+
+            // When the user drags the marker, update the address input with the new location
+            marker.addListener('dragend', () => {
+                geocoder.geocode({ location: marker.getPosition() }, (results, status) => {
+                    if (status === 'OK') {
+                        if (results[0]) {
+                        document.getElementById('address-input').value = results[0].formatted_address;
+                        }
+                    }
+                });
+            });
+
+            // Get the latitude, longitude, and formatted address of the geocoded location
+            const latitude = results[0].geometry.location.lat();
+            const longitude = results[0].geometry.location.lng();
+            const formattedAddress = results[0].formatted_address;
+
+            // Display the latitude, longitude, and formatted address in an alert
+            // alert(`Latitude: ${latitude}\nLongitude: ${longitude}\nAddress: ${formattedAddress}`);
+            } else {
+                // alert('Geocode was not successful for the following reason: ' + status);
+                alert('Masukan Alamat');
+            }
+        });
+    }
+</script>
+
+<!-- Script for the map on modal -->
+<!-- <script>
+    let myMap;
+    let myGeocoder;
+    let myMarker;
+
+    function initMapModal() {
+        // Create a new map centered on Indonesia
+        myMap = new google.maps.Map(document.getElementById('mapModal'), {
+            center: { lat: -0.7893, lng: 113.9213 },
+            zoom: 6
+        });
+
+        // Create a new geocoder
+        myGeocoder = new google.maps.Geocoder();
+
+        // Create a new autocomplete object for the address input
+        const autocomplete = new google.maps.places.Autocomplete(
+            document.getElementById('address-inputModal'),
+            { types: ['geocode'] }
+        );
+
+        // When the user selects an address from the autocomplete dropdown
+        autocomplete.addListener('place_changed', () => {
+            // Get the selected place from the autocomplete object
+            const place = autocomplete.getPlace();
+
+            // If the place has a geometry object, center the map on it and add a marker
+            if (place.geometry) {
+            myMap.setCenter(place.geometry.location);
+            myMap.setZoom(16);
+
+            // Remove any existing marker from the map
+            if (myMarker) {
+                myMarker.setMap(null);
+            }
+
+            // Create a new marker at the selected location
+            myMarker = new google.maps.Marker({
+                map: myMap,
+                position: place.geometry.location,
+                draggable: true
+            });
+
+            // When the user drags the marker, update the address input with the new location
+            myMarker.addListener('dragend', () => {
+                myGeocoder.geocode({ location: myMarker.getPosition() }, (results, status) => {
+                if (status === 'OK') {
+                    if (results[0]) {
+                    document.getElementById('address-inputModal').value = results[0].formatted_address;
+                    }
+                }
+                });
+            });
+            }
+        });
+    }
+
+    // Define the geocodeAddress function
+    function geocodeAddressModal() {
+        // Get the address input element
+        const addressInput = document.getElementById('address-inputModal');
+
+        // Geocode the entered address
+        myGeocoder.geocode({ address: addressInput.value }, (results, status) => {
+            if (status === 'OK') {
+            // Center the map on the geocoded location
+            myMap.setCenter(results[0].geometry.location);
+            myMap.setZoom(16);
+
+            // Remove any existing marker from the map
+            if (myMarker) {
+                myMarker.setMap(null);
+            }
+
+            // Create a new marker at the geocoded location
+            myMarker = new google.maps.Marker({
+                map: myMap,
+                position: results[0].geometry.location,
+                draggable: true
+            });
+
+            // When the user drags the marker, update the address input with the new location
+            myMarker.addListener('dragend', () => {
+                myGeocoder.geocode({ location: myMarker.getPosition() }, (results, status) => {
+                if (status === 'OK') {
+                    if (results[0]) {
+                    document.getElementById('address-inputModal').value = results[0].formatted_address;
+                    }
+                }
+                });
+            });
+
+            // Get the latitude, longitude, and formatted address of the geocoded location
+            const latitude = results[0].geometry.location.lat();
+            const longitude = results[0].geometry.location.lng();
+            const formattedAddress = results[0].formatted_address;
+
+            // Display the latitude, longitude, and formatted address in an alert
+            alert(`Latitude: ${latitude}\nLongitude: ${longitude}\nAddress: ${formattedAddress}`);
+            } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+
+</script> -->

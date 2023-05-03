@@ -15,6 +15,9 @@
                 'deskripsi_pembeli' => $row['deskripsi_pembeli'],
                 'foto_pembeli' => $row['foto_pembeli'],
                 'nama_pembeli' => $row['nama_pembeli'],
+                'savedetail_address' => $row['savedetail_address'],
+                'savelatitude' => $row['savelatitude'],
+                'savelongitude' => $row['savelongitude'],
             );
             $co++;
         }

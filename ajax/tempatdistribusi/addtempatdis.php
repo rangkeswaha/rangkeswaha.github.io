@@ -25,6 +25,9 @@
         $deskripsi = $_POST["deskripsi"];
         // $namafoto = $_POST["namafoto"];
         $filefoto = $_FILES["namafoto"];
+        $savelatitude = $_POST["savelatitude"];
+        $savelongitude = $_POST["savelongitude"];
+        $savedetail_address = $_POST["savedetail_address"];
 
         // echo $filefoto;
 
@@ -59,6 +62,9 @@
             'alamat_pembeli' => $alamat,
             'deskripsi_pembeli' => $deskripsi,
             'foto_pembeli' => $target_file,
+            'savelatitude' => $savelatitude,
+            'savelongitude' => $savelongitude,
+            'savedetail_address' => $savedetail_address,
         ];
 
         $ref_table = "distribusi";

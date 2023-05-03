@@ -235,9 +235,9 @@ include "../import.php"; ?>
                             <thead>
                                 <tr>
                                     <th>Nama Barang</th>
-                                    <th>Tanggal Pembelian</th>
-                                    <th>Lama Pembelian</th>
                                     <th>Stok Barang</th>
+                                    <th>Lama Pembelian</th>
+                                    <th>Tanggal Pembelian</th>
                                     <th>Delete</th>
                                 </tr>
                             </thead>
@@ -350,6 +350,8 @@ include "../import.php"; ?>
             allnewstock.length = 0;
             var str = "";
             $("#tablegoods").html(str);
+            // Reload the current page
+            location.reload();
           },
           error: function(a, err){
               //lakukan sesuatu untuk handle error

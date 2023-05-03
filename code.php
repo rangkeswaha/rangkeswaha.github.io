@@ -1,43 +1,46 @@
-<?php
-    session_start();
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Map Example</title>
+    <style>
+      #map {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5yreJhIC-v-FDNOf1RFZ1C46y7bgAwLw&callback=initMap"
+    async defer></script>
+    <script>
+      function initMap() {
+        // Initialize the map
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 8,
+          center: {lat: -8.409518, lng: 115.188919}
+        });
 
-    echo 'diluar first';
+        // Use the Google Maps Geocoder to find the latitude and longitude of the location
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({'address': 'Perumahan Wisma Nusa Permai Blok E No. 40 Kelurahan Benua, Benoa, South Kuta, Badung Regency, Bali 80361, Indonesia'}, function(results, status) {
+          if (status === 'OK') {
+            // Set the map center to the location
+            map.setCenter(results[0].geometry.location);
 
-    if(isset($_POST['savebarangbutton'])){
+            // Add a marker at the location
+            var marker = new google.maps.Marker({
+              map: map,
+              position: results[0].geometry.location
+            });
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
 
-        echo 'didalem first';
-        // $namegoods = $_POST["namegoods"];
-        // $pricegoods = $_POST["pricegoods"];
-        // $stockgoods = $_POST["stockgoods"];
-        // $kategoribarang = $_POST["kategoribarang"];
-        // $formdeskripsi = $_POST["formdeskripsi"];
-        // $fotobarang = $_FILES["fotobarang"]['name'];
-
-        // $random_no = rand(1111,9999);
-
-        // $new_image = $random_no.$fotobarang;
-    
-        // $filename = 'uploads/' .$newimage;
-        
-
-        // $properties = [
-        //     'ngoods' => $namegoods,
-        //     'pgoods' => $pricegoods,
-        //     'sgoods' => $stockgoods,
-        //     'kgoods' => $kategoribarang,
-        //     'dgoods' => $formdeskripsi,
-        //     'fgoods' => $filename,
-        // ];
-
-        // $ref_table = "inventory";
-        // $postRef_result = $database->getReference($ref_table)->push($properties);
-
-        echo 'didalem last';
-
-        header("Location: index.php");
-
-    }
-
-    echo 'diluar last';
-
-?>
+<!-- Google Api -->
+<!-- AIzaSyC5yreJhIC-v-FDNOf1RFZ1C46y7bgAwLw -->
