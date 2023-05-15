@@ -21,12 +21,15 @@ include "../import.php"; ?>
        
     });
 
-    function pilih(key, nama, foto, alamat, deskripsi){
+    function pilih(key, nama, foto, alamat, deskripsi, detail_address, latitude, longitude){
         sessionStorage.setItem("diskey", key);
         sessionStorage.setItem("disnama", nama);
         sessionStorage.setItem("disfoto", foto);
         sessionStorage.setItem("disalamat", alamat);
         sessionStorage.setItem("disdeskripsi", deskripsi);
+        sessionStorage.setItem("disdetailaddress", detail_address);
+        sessionStorage.setItem("dislatitude", latitude);
+        sessionStorage.setItem("dislongitude", longitude);
 
         window.location.href = "pilihbarang.php";
     }
@@ -40,7 +43,7 @@ include "../import.php"; ?>
 
           var str = '';
           for (var i = 0; i < data.length; i++){
-            str += '<div class="col-md-12" onclick="pilih(\''+data[i].key+'\', \''+data[i].nama_pembeli+'\', \''+data[i].foto_pembeli+'\', \''+data[i].alamat_pembeli+'\', \''+data[i].deskripsi_pembeli+'\')">'+
+            str += '<div class="col-md-12" onclick="pilih(\''+data[i].key+'\', \''+data[i].nama_pembeli+'\', \''+data[i].foto_pembeli+'\', \''+data[i].alamat_pembeli+'\', \''+data[i].deskripsi_pembeli+'\', \''+data[i].savedetail_address+'\', \''+data[i].savelatitude+'\', \''+data[i].savelongitude+'\')">'+
             '<div class="card">'+
                 '<center>'+
                 '<img src="/skripsi/apps/ajax/tempatdistribusi/'+data[i].foto_pembeli+'" alt="Avatar" style="object-position: inherit; border-top-left-radius: 15px; border-top-right-radius: 15px; position: relative; object-fit: cover; width: 100%; height: 200px; background-repeat: no-repeat; ">'+
@@ -86,7 +89,7 @@ include "../import.php"; ?>
                 for (var i = 0; i < data.length; i++){
                     // alert(data[i].nama_pembeli.toLowerCase().indexOf(searchkey) > -1);
                     if((data[i].nama_pembeli.toLowerCase().indexOf(searchkey) > -1) == true){
-                        str += '<div class="col-md-12" onclick="pilih(\''+data[i].key+'\', \''+data[i].nama_pembeli+'\', \''+data[i].foto_pembeli+'\', \''+data[i].alamat_pembeli+'\', \''+data[i].deskripsi_pembeli+'\')">'+
+                        str += '<div class="col-md-12" onclick="pilih(\''+data[i].key+'\', \''+data[i].nama_pembeli+'\', \''+data[i].foto_pembeli+'\', \''+data[i].alamat_pembeli+'\', \''+data[i].deskripsi_pembeli+'\', \''+data[i].savedetail_address+'\', \''+data[i].savelatitude+'\', \''+data[i].savelongitude+'\')">'+
                         '<div class="card">'+
                             '<center>'+
                             '<img src="/skripsi/apps/ajax/tempatdistribusi/'+data[i].foto_pembeli+'" alt="Avatar" style="object-position: inherit; border-top-left-radius: 15px; border-top-right-radius: 15px; position: relative; object-fit: cover; width: 100%; height: 200px; background-repeat: no-repeat; ">'+
@@ -98,7 +101,7 @@ include "../import.php"; ?>
                             '</div>'+
                         '</div></div>';
                     }else if(searchkey == ""){
-                        str += '<div class="col-md-12" onclick="pilih(\''+data[i].key+'\', \''+data[i].nama_pembeli+'\', \''+data[i].foto_pembeli+'\', \''+data[i].alamat_pembeli+'\', \''+data[i].deskripsi_pembeli+'\')">'+
+                        str += '<div class="col-md-12" onclick="pilih(\''+data[i].key+'\', \''+data[i].nama_pembeli+'\', \''+data[i].foto_pembeli+'\', \''+data[i].alamat_pembeli+'\', \''+data[i].deskripsi_pembeli+'\', \''+data[i].savedetail_address+'\', \''+data[i].savelatitude+'\', \''+data[i].savelongitude+'\')">'+
                         '<div class="card">'+
                             '<center>'+
                             '<img src="/skripsi/apps/ajax/tempatdistribusi/'+data[i].foto_pembeli+'" alt="Avatar" style="object-position: inherit; border-top-left-radius: 15px; border-top-right-radius: 15px; position: relative; object-fit: cover; width: 100%; height: 200px; background-repeat: no-repeat; ">'+
@@ -154,8 +157,22 @@ include "../import.php"; ?>
                     <br>
                     <form action="#" method="POST" enctype="multipart/form-data">
                         <div class="form-group">
+                            <div class="row form-row">
+                                <div class="col-md-12">
+                                    <!-- Order Button Plain -->
+                                    <label class="form-label" style="font-size:20px; font-weight: bold; margin-top: 1%;">Buat Pesanan</label>
+                                    <br><br>
+                                    <center>
+                                      <label style="margin-bottom: 1%; font-size: 13px;">(Pesanan Secara Langsung)</label>
+                                      <button type="button" id="Plainorder" name="Plainorder" style="width: 95%; border-radius: 25px; height: 50px;" class="btn btn-success btn-cons"><i class="icon-ok"></i>Pesanan Tanpa Hotel</button>
+                                    </center>
+                                    <!-- END Order Button Plain -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <!-- <div style="display: flex;"> -->
-                            <label class="form-label" style="font-size:20px; font-weight: bold; margin-top: 1%;">Data Tempat</label>
+                            <label class="form-label" style="font-size:17px; font-weight: bold; margin-top: 1%;">Data Tempat</label>
                             <label style="margin-bottom: 1%; font-size: 13px;">(Pilih Salah Satu)</label>
                             <input class="form-control" id="myInput" type="text" placeholder="Cari Tempat.....">  
                             <!-- </div> -->

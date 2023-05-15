@@ -87,13 +87,13 @@
                     <li id="sidebar_history_master"> <a href="/skripsi/apps/masterpage/masterkategori.php">Master Kategori</a></li>
                 </ul>
             </li>
-            <li id="">
+            <!-- <li id="">
                 <a href="javascript:;"> <i class="material-icons">shop</i> <span
                         class="title">Marketplace</span> <span class=" arrow"></span> </a>
                 <ul class="sub-menu">
                     <li id="sidebar_history_master"> <a href="/skripsi/apps/marketplace/cobajdid.php">JD.ID</a></li>
                 </ul>
-            </li>
+            </li> -->
         </ul>
             <!-- END SIDEBAR MENU -->
     </div>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Calendar App</title>
+  <meta name="google-signin-client_id" content="143778673708-8itpfmq078q11u3oph2eok4f22nmd0si.apps.googleusercontent.com">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="script.js"></script>
+  <script src="https://apis.google.com/js/api.js"></script>
+</head>
+<body>
+  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+  <div id="calendar"></div>
+  <form id="event-form">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required>
+    <br>
+    <label for="start-time">Start Time:</label>
+    <input type="datetime-local" id="start-time" name="start-time" required>
+    <br>
+    <label for="end-time">End Time:</label>
+    <input type="datetime-local" id="end-time" name="end-time" required>
+    <br>
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location">
+    <br>
+    <label for="description">Description:</label>
+    <textarea id="description" name="description"></textarea>
+    <br>
+    <input type="submit" value="Create Event">
+  </form>
+</body>
+</html>

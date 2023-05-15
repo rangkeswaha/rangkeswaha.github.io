@@ -44,6 +44,8 @@
         $allnewkeys = array();
 
         for($i = 0; $i < count((array)$data); $i++){
+            $totalstock = 0;
+            
             $properties = [
                 'lama_pembelian' => $data[$i]['buylengthgoods'],
                 'tanggal_pembelian' => $data[$i]['buydategoods'],
@@ -53,20 +55,37 @@
             $ref_table = "Pembelian_stok";
             $postRef_result = $database->getReference($ref_table)->push($properties);
 
+            $pembelianstoknewid = $postRef_result->getKey();
+            // echo 'New data ID: ' . $pembelianstoknewid;
+
+            // Total stok (stok baru)
+            $totalstock = $data[$i]['firststockgoods'] + $data[$i]['stockgoods'];
+
+            // ID barang
+            $uid = $data[$i]['key'];
+
+            $properties_history = [
+                'id_Barang' => $uid,
+                'id_Pembelian_Stok' => $pembelianstoknewid,
+                'stok_sebelumnya' => $data[$i]['firststockgoods'],
+                'stok_baru' => $totalstock,
+            ];
+
+            $ref_table_history = "Hpembelian_stok";
+            $postRef_result_history = $database->getReference($ref_table_history)->push($properties_history);
+
             // $newPostKey = $newPostRef->getKey();
             // array_push($allnewkeys, array(
             //     'key_pembelian' => $newPostRef->getKey(),
             //     'key_barang' => $data[$i]['key'],
             // ));
 
-            $uid = $data[$i]['key'];
-
-            $totalstock = $data[$i]['firststockgoods'] + $data[$i]['stockgoods'];
-
             $ref = $database->getReference('inventory');
 
             $ref->getChild($uid)->update(['stok_barang' => $totalstock]);
 
+
+            $totalstock = 0;
             // $postData = [
             //     'stok_barang' => $stockgoods,
             // ];

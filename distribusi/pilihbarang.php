@@ -3,13 +3,11 @@
 <?php 
 session_start();
 include "../import.php"; ?>
-<link rel="stylesheet" href="tambahbarang.css">
+<!-- <link rel="stylesheet" href="pembelianstok.css"> -->
 <script>
-    var diskey;
-    var disnama;
-    var disfoto;
-    var disalamat;
-    var disdeskripsi;
+    // untuk membatasi grid yang ditampilkan
+    // var defaultgrid = 5;
+    
     var allbarang;
 
     function getbarang() {
@@ -20,19 +18,19 @@ include "../import.php"; ?>
           var data = JSON.parse(isi);
           allbarang = data;
 
-          // alert(data[1].pgoods);
+          // alert(data[1].harga_barang);
           var str = '';
           for (var i = 0; i < data.length; i++){
             str += '<div class="col-md-3" onclick="detailbarang(\''+data[i].key+'\')">'+
               '<div class="card">'+
                 '<center>'+
                 '<br>'+
-                '<img src="/skripsi/apps/ajax/inventory/'+data[i].foto+'" alt="Avatar" style="width: 200px; height: 200px; border-radius: 15px;">'+
+                '<img src="/skripsi/apps/ajax/inventory/'+data[i].foto_barang+'" alt="Avatar" style="width: 200px; height: 200px; border-radius: 15px;">'+
                 '</center>'+
                 '<div class="container">'+
-                  '<h4><b>'+data[i].nama+'</b></h4> '+
-                  '<h4>Rp '+data[i].harga+' per kg</h4>'+
-                  '<p>Stok '+data[i].stok+'kg</p> '+
+                  '<h4><b>'+data[i].nama_barang+'</b></h4> '+
+                  '<h4>Rp '+data[i].harga_barang+' per kg</h4>'+
+                  '<p>Stok '+data[i].stok_barang+'kg</p> '+
                 '</div></div></div>';
           }
 
@@ -53,25 +51,16 @@ include "../import.php"; ?>
       });
     }
 
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
+    function detailbarang(key){
+      sessionStorage.setItem("keystokbarang", key);
+      // alert('key telah tersimpan = ' + key);
 
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("closeModal")[0];
-
-
-    function btnModal() {
-        modal.style.display = "block";
-    }
-
-    function closeModal() {
-        modal.style.display = "none";
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+      for (var i = 0; i < allbarang.length; i++){
+        if(allbarang[i].key == key){
+          // alert(allbarang[i].halo);
+          document.getElementById('namegoods').value = allbarang[i].nama_barang;
         }
+      }
     }
 
     function getallkategorioption(){
@@ -87,7 +76,7 @@ include "../import.php"; ?>
             str += '<select class="form-control select2" id="selectKategori" name="selectKategori" data-init-plugin="select2" required>';
             str += '<option value="">Pilih Kategori</option>';
             for(var i=0;i<data.length;i++){
-                str += '<option id="'+data[i].kategori+'" value="'+data[i].kategori+'_'+data[i].key+'">'+ data[i].kategori +'</option>';
+                str += '<option value="'+data[i].kategori+'_'+data[i].key+'">'+ data[i].kategori +'</option>';
             }
             str += '</select></div></div>';
 
@@ -104,21 +93,65 @@ include "../import.php"; ?>
     $(document).ready(function(){
         getbarang();
         getallkategorioption();
-    
-        diskey = sessionStorage.getItem("diskey");
-        disnama = sessionStorage.getItem("disnama");
-        disfoto = sessionStorage.getItem("disfoto");
-        disalamat = sessionStorage.getItem("disalamat");
-        disdeskripsi = sessionStorage.getItem("disdeskripsi");
 
-        alert(diskey);
+        // ambil session storage
+        // var myValue = sessionStorage.getItem('dislongitude');
+        // alert(myValue);
+
+        // $('#tabel-data').DataTable();
+
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            var str = '';
+            for (var i = 0; i < allbarang.length; i++){
+              if (allbarang[i].nama_barang.toLowerCase().includes(value.toLowerCase())){
+                str += '<div class="col-md-3" onclick="detailbarang(\''+allbarang[i].key+'\')">'+
+                  '<div class="card">'+
+                    '<center>'+
+                    '<br>'+
+                    '<img src="/skripsi/apps/ajax/inventory/'+allbarang[i].foto_barang+'" alt="Avatar" style="width: 200px; height: 200px; border-radius: 15px;">'+
+                    '</center>'+
+                    '<div class="container">'+
+                      '<h4><b>'+allbarang[i].nama_barang+'</b></h4> '+
+                      '<h4>Rp '+allbarang[i].harga_barang+' per kg</h4>'+
+                      '<p>Stok '+allbarang[i].stok_barang+'kg</p> '+
+                    '</div></div></div>';
+              }
+              else{
+                // str = '<center><h4>Data Tidak Ada</h4></center>';
+              }
+            }    
+
+            if(str == ''){
+                str = '<div style="margin-top: 2.5%;"><center><h1>Data Tidak Ada</h1></center></div>';
+            }
+
+            $("#viewBarang").html(str);
+        });
     });
-
-
     document.onload = function () {
         getallkategorioption();
     };
 </script>
+<style>
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 100%;
+    border-radius: 15px;
+    margin-top: 25px;
+    cursor: pointer;
+    background-color: white;
+  }
+
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+
+  .container {
+    padding: 2px 16px;
+  }
+</style>
   <!-- END HEAD -->
   <!-- BEGIN BODY -->
   <body class="">
@@ -146,150 +179,97 @@ include "../import.php"; ?>
                 <li>
                     <p>YOU ARE HERE</p>
                 </li>
-                <li><a href="/skripsi/apps/distribusi/pesanan.php" class="active">Pilih Tempat</a> </li>
+                <li><a href="/skripsi/apps/distribusi/pesanan.php" class="#">Pilih Tempat</a> </li>
                 <li><a href="/skripsi/apps/distribusi/pilihbarang.php" class="active">Pilih Barang</a> </li>
             </ul>
             <div class="page-title">
                 <h3>Pengiriman - <span class="semi-bold">Pilih Barang</span></h3>
             </div>
+            <?php
+                if(isset($_SESSION['status'])){
+                    echo "<h5 class='alert alert-success'>".$_SESSION['status']."<h5>";
+                    unset($_SESSION['status']);
+                }
+            ?>
             <div class="grid simple form-grid">
                 <div class="grid-body no-border" style="border-radius: 10px;">
                     <br>
-                    <form action="../ajax/inventory/editdeletebarang.php" method="POST" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data">
                         <div class="form-group">
-                            <label class="form-label" style="font-size:20px; font-weight: bold; margin-bottom: 1%; margin-top: 1%;">Data Barang</label>
-                            <!-- The Modal -->
-                            <div id="myModal" class="modal">
-                              <!-- Modal content -->
-                              <div class="modal-content">
-                                  <span onclick="closeModal()" class="closeModal">&times;</span>
-                                  <h3>Data Barang</h3>
-                                  <br><br>
-                                  <div id="modalBody">
-                                  <label>Gambar Barang</label>
-                                  <img id="gambarbarangmodal" name="gambarbarangmodal" src="/skripsi/apps/ajax/inventory/uploads/1823profile 2.jpg" alt="Avatar" style="width: 200px; height: 200px; border-radius: 15px;">
-                                  <br><br>
-                                  <div class="form-group">
-                                      <div class="row form-row">
-                                          <div class="col-md-12">
-                                              <!-- BEGIN TAG INPUTS / FILE UPLOADER CONTROLS-->
-                                              <div class="fallback">
-                                                  <input id="fotobarang" accept="image/*" name="fotobarang" type="file"/>
-                                              </div>
-                                              <!-- END TAG INPUTS / FILE UPLOADER CONTROLS-->
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div class="form-group">
-                                        <div class="row form-row">
-                                            <div class="col-md-8">
-                                                <label>Nama Barang</label>
-                                                <input name="namegoods" id="namegoods" type="text"
-                                                    class="form-control" placeholder="Telur" value="">
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>Harga Barang per Kilo</label>
-                                                <input name="pricegoods" style="text-align: center;" id="pricegoods" type="number"
-                                                    class="form-control currency" min="0" placeholder="100000" value="0">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="row form-row">
-                                            <div class="col-md-6">
-                                                <label>Jumlah Stok (kg)</label>
-                                                <input name="stockgoods" id="stockgoods" type="text"
-                                                    class="form-control" placeholder="10" value="">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Kategori</label>
-                                                <span class="help" id="labelPegawai">Contoh "Daging Mentah"</span>
-                                                <div class="row form-row" id="formkategori">
-                                                    <div class="col-md-12">
-                                                        <div class=" right">
-                                                            <!-- <i class=""></i> -->
-                                                            <select class="form-control select2" id="selectKategori" name="selectKategori" data-init-plugin="select2" required>
-                                                                <option value="">
-                                                                    Pilih Kategori
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="row form-row">
-                                            <div class="col-md-12">
-                                                <label class="form-label">Deskripsi Barang</label>
-                                                <br>
-                                                <textarea rows="4" style="width: 100%;" id="formdeskripsi" name="formdeskripsi" placeholder="Tulis Disini......."></textarea>
-                                                <!-- <textarea name="formdeskripsi" id="" cols="30" rows="10"></textarea> -->
-                                                <!-- <input name="formdeskripsi" id="formdeskripsi" type="textarea"class="form-control" placeholder="Tulis Disini......." value=""> -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="pull-right">
-                                            <button type="submit" id="editBarang" name="editBarang" class="btn btn-success btn-cons"><i class="icon-ok"></i>
-                                                Simpan</button>
-                                        </div>
-                                        <div class="pull-right">
-                                            <button type="submit" id="deleteBarang" name="deleteBarang" class="btn btn-danger btn-cons"><i class="icon-ok"></i>
-                                                Hapus Barang</button>
-                                        </div>
-                                        <br>
-                                    </div>
-                                  </div>
-                              </div>
-                            </div>
-                            <input type="hidden" value="" id="oldImage" name="oldImage">
-                            <input type="hidden" value="" id="keyBarang" name="keyBarang">
-                            <div class="row form-row" id="viewBarang" name="viewBarang">
-                                <!-- <div class="col-md-3">
-                                  <div class="card">
-                                    <center>
-                                    <br>
-                                    <img src="/skripsi/apps/ajax/inventory/uploads/1823profile 2.jpg" alt="Avatar" style="width: 200px; height: 200px; border-radius: 15px;">
-                                    </center>
-                                    <div class="container">
-                                      <h4><b>Telur Ayam</b></h4> 
-                                      <h4>Rp 50000 per kg</h4>
-                                      <p>Stok 150kg</p> 
-                                    </div>
-                                  </div>
+                            <div class="row form-row">
+                                <div class="col-md-6">
+                                    <label>Nama Barang</label>
+                                    <input readonly name="namegoods" id="namegoods" type="text"
+                                        class="form-control" placeholder="Telur" value="">
                                 </div>
-                                <div class="col-md-3">
-                                  <div class="card">
-                                    <center>
-                                    <br>
-                                    <img src="/skripsi/apps/ajax/inventory/uploads/1823profile 2.jpg" alt="Avatar" style="width: 200px; height: 200px; border-radius: 15px;">
-                                    </center>
-                                    <div class="container">
-                                      <h4><b>Telur Ayam</b></h4> 
-                                      <h4>Rp 50000 per kg</h4>
-                                      <p>Stok 150kg</p> 
-                                    </div>
-                                  </div>
-                                </div> -->
+                                <div class="col-md-6">
+                                    <label>Jumlah Stok (kg)</label>
+                                    <input name="stockgoods" id="stockgoods" type="number"
+                                        class="form-control" placeholder="10" value="">
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="form-group">
+                            <div class="row form-row">
+                                <div class="col-md-6">
+                                    <label>Tanggal Penjualan/Pengiriman</label>
+                                    <input name="saledategoods" id="saledategoods" type="date"
+                                        class="form-control" value="">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Tanggal Pembayaran</label>
+                                    <input name="paydategoods" id="paydategoods" type="date"
+                                        class="form-control" value="">
+                                </div>
                             </div>
                         </div>
+                        
+                        <div class="form-group" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                            <div class="pull-right">
+                                <button type="button" id="addbutton" name="addbutton" class="btn btn-success btn-cons"><i class="icon-ok"></i>
+                                Tambah</button>
+                            </div>
+                        </div>
+                        <br><br><br>
                         <!-- table list barang -->
-                        <!-- <div class="form-group">
-                            <table id="example" class='table - table-bordered table-stripped'>
-                                <thead>
-                                    <tr>
-                                        <th>Nama Barang</th>
-                                        <th>Harga Barang</th>
-                                        <th>Stok Barang</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="listbarang">
-                                    
-                                </tbody>
-                            </table>
-                        </div> -->
+                        <table id="tabel-data" class="table table-striped table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Nama Barang</th>
+                                    <th>Stok Barang</th>
+                                    <th>Tanggal Pengiriman/Penjualan</th>
+                                    <th>Tanggal Pembayaran</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablegoods">
+                                <!-- <tr>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architect</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                        <div class="form-group" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                            <div class="pull-right">
+                                <!-- <center> -->
+                                <button type="button" id="nextbutton" name="nextbutton" style="background-color: #53a551; color: white;" class="btn btn-cons"><i class="icon-ok"></i>
+                                Lanjut Transaksi</button>
+                                <!-- </center> -->
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="font-size:20px; font-weight: bold; margin-bottom: 0%; margin-top: 1%;">Pilih Barang</label>
+                            <label>(Pilih barang yang akan dijual)</label>
+                            <label class="form-label" style="font-size:15px; font-weight: bold; margin-bottom: 1%; margin-top: 1%;">Pencarian Barang</label>
+                            <!-- <label>Pencarian Barang</label> -->
+                            <input style="border-radius: 10px;" class="form-control" id="myInput" type="text" placeholder="Nama barang"> 
+                            <br>
+                            <div class="row form-row" style="border-radius: 15px; background-color: #eeeeee;">
+                                <div style="margin-left: 0.5%; margin-right: 0.5%; margin-bottom: 2.5%;" class="row form-row" id="viewBarang" name="viewBarang">
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -304,101 +284,147 @@ include "../import.php"; ?>
 
 
 <script>
+    var allnewstock = [];
 
-    // $('#editBarang').click(function(){
-    //     alert('Edit');
-    // });
-
-    // $('#hapusBarang').click(function(){
-    //     alert('Delete');
-    // });
-
-    function detailbarang(key){
-      sessionStorage.setItem("keystokbarang", key);
-      // alert('key telah tersimpan = ' + key);
-      modal = document.getElementById("myModal");
-      modal.style.display = "block";
-
-      for (var i = 0; i < allbarang.length; i++){
-        if(allbarang[i].key == key){
-          // alert(allbarang[i].halo);
-          document.getElementById("gambarbarangmodal").src= "/skripsi/apps/ajax/inventory/" + allbarang[i].foto;
-          document.getElementById('oldImage').value = allbarang[i].foto;
-          document.getElementById('keyBarang').value = allbarang[i].key;
-          document.getElementById('namegoods').value = allbarang[i].nama;
-          document.getElementById('pricegoods').value = allbarang[i].harga;
-          document.getElementById('stockgoods').value = allbarang[i].stok;
-          document.getElementById('formdeskripsi').value = allbarang[i].deskripsi;
-          document.getElementById(allbarang[i].kategori).selected = true;
-        }
-      }
-    }
-
-    // $('#savebarangbutton').click(function(){
-    //     var namegoods = $("#namegoods").val();
-    //     var stockgoods = $("#stockgoods").val();
-    //     var pricegoods = $("#pricegoods").val();
-    //     var selectKategori = $("#selectKategori").val();
-    //     var formdeskripsi = $("#formdeskripsi").val();
-    //     var fotobarang = $("#fotobarang").prop('files')[0];
-
-    //     var splitkategori = selectKategori.split("_");
-    //     var kategoribarang = splitkategori[0];
+    $('#addbutton').click(function(){
+          var namegoods = $("#namegoods").val();
+          var stockgoods = $("#stockgoods").val();
+          var paydategoods = $("#paydategoods").val();
+          var saledategoods = $("#saledategoods").val();
         
-    //     alert(namegoods);
+        // if(namegoods == "" && stockgoods == "" && buylengthgoods == "" && buydategoods == ""){
+        //   alert("Tolong Lengkapi Data Terlebih Dahulu")
+        // }else{
 
-    //     var form_data = new FormData();
-    //     form_data.append("namegoods", namegoods);
-    //     form_data.append("stockgoods", stockgoods);
-    //     form_data.append("pricegoods", pricegoods);
-    //     form_data.append("kategoribarang", kategoribarang);
-    //     form_data.append("formdeskripsi", formdeskripsi);
-    //     form_data.append("file", fotobarang);
+          // alert(allbarang[0].key);
 
-    //     // alert(form_data[0])
+          for (var i = 0; i < allbarang.length; i++){
+            if(namegoods == allbarang[i].nama_barang){
+              allnewstock.push({
+                  namegoods: namegoods,
+                  stockgoods: stockgoods,
+                  paydategoods: paydategoods,
+                  saledategoods: saledategoods,
+                  firststockgoods: allbarang[i].stok_barang,
+                  key: allbarang[i].key,
+                  pricegoods: allbarang[i].harga_barang,
+              });
+            }
+          }
 
-    //     // $.ajax({
-    //     // url: "../ajax/inventory/codeaddbarang.php",
-    //     // type:"post",
-    //     // data:{
-    //     //     namegoods:namegoods,
-    //     //     stockgoods:stockgoods,
-    //     //     pricegoods:pricegoods,
-    //     //     formdeskripsi:formdeskripsi,
-    //     //     // fotobarang:fotobarang,
-    //     //     kategoribarang:kategoribarang,
-    //     // },
-    //     // success:function(isi)
-    //     // {
-    //     //     $('#example').DataTable().ajax.reload();
-    //     //     alert('Save Success');
-    //     // },
-    //     // error:function(err){
-    //     //     alert(err);
-    //     //     alert("err");
-    //     // }
-    //     // });
+          var str = "";
 
+          for (var i = 0; i < allnewstock.length; i++){
+            str += "<tr>"+
+            "<td>"+allnewstock[i].namegoods+"</td>"+
+            "<td>"+allnewstock[i].stockgoods+"</td>"+
+            "<td>"+allnewstock[i].saledategoods+"</td>"+
+            "<td>"+allnewstock[i].paydategoods+"</td>"+
+            "<td> <buttton id='del_"+i+"' class='btn btn-danger delStock'>Delete</button></td>"+
+            "</tr>";
+          }
+
+          // '<p>Stok '+data[i].stok_barang+'kg</p> '+
+          $("#tablegoods").html(str);
+        // }
+    });
+
+    // $(document).on("click",".savebutton",function(){
     //     $.ajax({
-    //     url: "../ajax/inventory/codeaddbarang.php",
-    //     type:"post",
-    //     data:{
-    //         form_data,
-    //     },
-    //     contentType: false,
-    //     processData: false,
-    //     success:function(isi)
-    //     {
-    //         // $('#example').DataTable().ajax.reload();
-    //         alert('Save Success');
-    //         alert(isi);
-    //     },
-    //     error:function(err){
-    //         alert(err);
-    //         alert("err");
-    //     }
+    //         url: '../ajax/inventory/codepembelianbarang.php',
+    //         type: 'POST',
+    //         data: { allnewstock:allnewstock },
+    //         success: function(response){
+    //             // alert(response);
+    //             // $(selected).closest('tr').fadeOut(800,function(){
+    //             //     $(this).remove();
+    //             // });
+    //             alert("Data Berhasil Disimpan");
+    //         },
+    //         error: function(a, err){
+    //             //lakukan sesuatu untuk handle error
+    //             alert("Data Gagal Disimpan");
+    //         }
     //     });
     // });
+
+    // $(document).on("click",".nextbutton",function(){
+    //   sessionStorage.setItem("allneworder", allnewstock);
+
+    //   window.location.href = "catatanbarang.php";
+
+    // });
+
+    $('#nextbutton').click(function(){
+      // Convert the array to a string and store it in session storage
+      sessionStorage.setItem('allneworder', JSON.stringify(allnewstock));
+
+      window.location.href = "catatanbarang.php";
+    });
+
+    // $(document).ready(function() {
+    //   $('#pembelianbarang').submit(function(event) {
+    //     event.preventDefault();
+    //     var formData = $(this).serialize();
+    //     var allnewdata = JSON.stringify(allnewstock);
+    //     $.ajax({
+    //       type: 'POST',
+    //       url: '../ajax/inventory/codepembelianbarang.php',
+    //       data: { allnewdata:allnewdata },
+    //       success: function(response) {
+    //         // console.log(response);
+    //         alert("Data Berhasil Disimpan");
+    //         allnewstock.length = 0;
+    //         var str = "";
+    //         $("#tablegoods").html(str);
+    //         // Reload the current page
+    //         location.reload();
+    //       },
+    //       error: function(a, err){
+    //           //lakukan sesuatu untuk handle error
+    //           alert("Data Gagal Disimpan");
+    //       },
+    //     });
+    //   });
+    // });
+
+    // $(document).ready(function() {
+    //   $('#catatanbarang').submit(function(event) {
+    //     sessionStorage.setItem("allneworder", allnewstock);
+
+    //     window.location.href = "catatanbarang.php";
+    //   });
+    // });
+
+    $(document).on("click",".delStock",function(){
+        var selected = this;
+        var id = this.id;
+        // alert(id);
+
+        var split = id.split("_");
+
+        // alert(split);
+
+        kategoriawal = split[0];
+        rownumber = split[1];
+
+        allnewstock.splice(rownumber, 1);
+
+        var str = "";
+
+        for (var i = 0; i < allnewstock.length; i++){
+          str += "<tr>"+
+          "<td>"+allnewstock[i].namegoods+"</td>"+
+          "<td>"+allnewstock[i].stockgoods+"</td>"+
+          "<td>"+allnewstock[i].saledategoods+"</td>"+
+          "<td>"+allnewstock[i].paydategoods+"</td>"+
+          "<td> <buttton id='del_"+i+"' class='btn btn-danger delStock'>Delete</button></td>"+
+          "</tr>";
+        }
+
+        $("#tablegoods").html(str);
+        
+    });
 
     (function($) {
     $.fn.currencyInput = function() {
@@ -424,79 +450,3 @@ include "../import.php"; ?>
         $('input.currency').currencyInput();
     });
 </script>
-
-<style>
-  .card {
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    width: 100%;
-    border-radius: 15px;
-    margin-top: 25px;
-    cursor: pointer;
-  }
-
-  .card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-  }
-
-  .container {
-    padding: 2px 16px;
-  }
-
-  .closebtn {
-    margin-left: 15px;
-    color: white;
-    font-weight: bold;
-    float: right;
-    font-size: 22px;
-    line-height: 20px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-
-  .closebtn:hover {
-    color: black;
-  }
-
-
-  /* The Modal (background) */
-  .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
-
-  /* Modal Content */
-  .modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    margin-left: 25%;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 53%;
-  }
-
-  /* The Close Button */
-  .closeModal {
-    color: #aaaaaa;
-    float: right;
-    font-size: 28px;
-    margin-top: -1.2%;
-    font-weight: bold;
-  }
-
-  .closeModal:hover,
-  .closeModal:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-  }
-</style>
