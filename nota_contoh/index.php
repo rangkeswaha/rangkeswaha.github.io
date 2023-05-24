@@ -2,22 +2,32 @@
 <html>
 <head>
 	<title>Bill Payment</title>
-	<style>
-		/* CSS styles go here */
-	</style>
+    <?php 
+    session_start();
+    include "../import.php"; ?>
 </head>
 <body>
 	<!-- Page content goes here -->
     <header>
         <div class="logo">
-            <img src="path/to/logo.png" alt="Restaurant Logo">
+            <!-- <img src="path/to/logo.png" alt="Restaurant Logo"> -->
+            <h1>I GK ADI WIRAWAN</h1>
+            <br>
+            <h5 style="margin-top: -10%; margin-left: 12%;">081 338 431 832 <span class="middle-dot">.</span> 085 954 169 929</h5>
         </div>
         <div class="restaurant-name">
-            Restaurant Name
+            <label>03 des 2020</label>
+            <br>
+            <center>
+                <h2>Hotel Rangke</h2>
+            </center>
         </div>
     </header>
 
     <style>
+        body {
+            background: white;
+        }
         header {
             display: flex;
             justify-content: space-between;
@@ -29,8 +39,13 @@
             height: 50px;
         }
         .restaurant-name {
-            font-size: 24px;
+            font-size: 15px;
             font-weight: bold;
+        }
+        .middle-dot {
+            position: relative;
+            top: -.1em;
+            font-size: 1.5em;
         }
     </style>
 
@@ -42,6 +57,7 @@
                     <th>Item</th>
                     <th>Quantity</th>
                     <th>Price</th>
+                    <th>Sub Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,7 +75,8 @@
                     echo '<tr>';
                     echo '<td>' . $order['item'] . '</td>';
                     echo '<td>' . $order['quantity'] . '</td>';
-                    echo '<td>$' . number_format($order['price'], 2) . '</td>';
+                    echo '<td>Rp ' . number_format($order['price'], 2) . '</td>';
+                    echo '<td>Rp ' . number_format($order['price'] * $order['quantity'], 2) . '</td>';
                     echo '</tr>';
                 }
                 ?>
@@ -94,7 +111,7 @@
         <div class="total">
             Total: <span id="total"></span>
         </div>
-        <button style="length: 10000px;" id="print-button" onclick="window.print()">Print</button>
+        <button style="width: 100px;" id="print-button" onclick="window.print()">Print</button>
     </footer>
 
     <style>
@@ -125,6 +142,9 @@
         @media print {
             #print-button {
                 display: none;
+            }
+            @page {
+                margin-bottom: 0;
             }
         }
     </style>

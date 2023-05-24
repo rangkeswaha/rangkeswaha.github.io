@@ -25,8 +25,9 @@
                 <a href="javascript:;"> <i class="material-icons">local_shipping</i> <span
                         class="title">Kirim Telur</span> <span class=" arrow"></span> </a>
                 <ul class="sub-menu">
-                    <li id="sidebar_history_master"> <a href="/skripsi/apps/distribusi/daftartempat.php">Daftar Tempat</a></li>
-                    <li id="sidebar_history_data_pegawai"> <a href="/skripsi/apps/distribusi/pesanan.php">Buat Pesanan</a></li>
+                    <li id="sidebar_daftar_tempat"> <a href="/skripsi/apps/distribusi/daftartempat.php">Daftar Tempat</a></li>
+                    <li id="sidebar_buat_pesanan"> <a href="/skripsi/apps/distribusi/pesanan.php">Buat Pesanan</a></li>
+                    <li id="sidebar_list_pesanan"> <a href="/skripsi/apps/distribusi/daftarpesanan.php">List Pesanan</a></li>
                 </ul>
             </li>
             <!-- History Log -->
@@ -65,10 +66,10 @@
                 <a href="javascript:;"> <i class="material-icons">folder</i> <span
                         class="title">Laporan</span> <span class=" arrow"></span> </a>
                 <ul class="sub-menu">
-                    <li id="sidebar_history_master"> <a href="/PTRutan/LEAPHRIS/kerjaan/history/historymaster.php">Distribusi</a></li>
+                    <!-- <li id="sidebar_history_master"> <a href="/PTRutan/LEAPHRIS/kerjaan/history/historymaster.php">Distribusi</a></li>
                     <li id="sidebar_history_data_pegawai"> <a href="/PTRutan/LEAPHRIS/kerjaan/history/historydatapegawai.php">Laba Rugi</a></li>
-                    <li id="sidebar_history_data_pegawai"> <a href="/PTRutan/LEAPHRIS/kerjaan/history/historydatapegawai.php">Hotel</a></li>
-                    <li id="sidebar_history_data_pegawai"> <a href="/PTRutan/LEAPHRIS/kerjaan/history/historydatapegawai.php">Penghitungan Stok</a></li>
+                    <li id="sidebar_history_data_pegawai"> <a href="/PTRutan/LEAPHRIS/kerjaan/history/historydatapegawai.php">Hotel</a></li> -->
+                    <li id="sidebar_laporan_penghitungan_stok"> <a href="/skripsi/apps/laporan_stok/laporanstok.php">Penghitungan Stok</a></li>
                 </ul>
             </li>
             <!-- History -->
@@ -76,8 +77,8 @@
                 <a href="javascript:;"> <i class="material-icons">history</i> <span
                         class="title">Riwayat</span> <span class=" arrow"></span> </a>
                 <ul class="sub-menu">
-                    <li id="sidebar_history_master"> <a href="/PTRutan/LEAPHRIS/kerjaan/history/historymaster.php">Pengiriman</a></li>
-                    <li id="sidebar_history_data_pegawai"> <a href="/PTRutan/LEAPHRIS/kerjaan/history/historydatapegawai.php">Penjualan</a></li>
+                    <li id="sidebar_history_pengiriman"> <a href="/skripsi/apps/history_pengiriman/historypengiriman.php">Penjualan</a></li>
+                    <li id="sidebar_history_pembelian"> <a href="/skripsi/apps/history_pembelian/historypembelian.php">Pembelian Stok</a></li>
                 </ul>
             </li>
             <li id="master_page">

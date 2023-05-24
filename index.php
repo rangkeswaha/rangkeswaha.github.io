@@ -1,3 +1,9 @@
+<?php
+
+session_start();
+
+?>
+
 <!DOCTYPE html>
 <html>
 <?php include "import.php"; ?>
@@ -36,8 +42,25 @@
                 <button class="w3-button w3-black" style="border-radius: 15px;">Notifikasi <span class="badge badge-important">1</span></button>
             </div>
           </div>
+          <br>
+          <div class="grid simple form-grid">
+              <div class="grid-body no-border" style="border-radius: 10px;">
+                  <br>
+                  <form action="../ajax/inventory/codeaddbarangfix.php" method="POST" enctype="multipart/form-data">
+                      <div class="form-group">
+                          <div class="row form-row">
+                              <div class="col-md-12">
+                                <center>
+                                  <h1>Dashboard Masih Kosong</h1>
+                                </center>
+                              </div>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
           <div id="container">
-            <div class="row 2col">
+            <!-- <div class="row 2col">
               <div class="col-md-3 col-sm-6 spacing-bottom-sm spacing-bottom">
                 <div class="tiles blue added-margin">
                   <div class="tiles-body">
@@ -108,9 +131,9 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-8 spacing-bottom">
+            </div> -->
+            <!-- <div class="row"> -->
+              <!-- <div class="col-md-8 spacing-bottom">
                 <div class="row tiles-container tiles white spacing-bottom">
                   <div class="tile-more-content col-md-4 col-sm-4 no-padding">
                     <div class="tiles green">
@@ -289,8 +312,8 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-md-4">
+              </div> -->
+              <!-- <div class="col-md-4">
                 <div class="row spacing-bottom ">
                   <div class="col-md-12">
                     <div class="tiles white added-margin">
@@ -397,8 +420,8 @@
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </div> -->
+            <!-- </div> -->
           </div>
           <!-- END PAGE -->
         </div>

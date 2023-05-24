@@ -1,9 +1,19 @@
 <!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.1.9/jquery.datetimepicker.min.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.1.9/jquery.datetimepicker.min.js"></script>
 <html>
 <?php 
 session_start();
 include "../import.php"; ?>
 <!-- <link rel="stylesheet" href="pembelianstok.css"> -->
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.1.9/jquery.datetimepicker.min.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.1.9/jquery.datetimepicker.min.js"></script>
+
 <script>
     // untuk membatasi grid yang ditampilkan
     // var defaultgrid = 5;
@@ -213,8 +223,9 @@ include "../import.php"; ?>
                             <div class="row form-row">
                                 <div class="col-md-6">
                                     <label>Tanggal Penjualan/Pengiriman</label>
-                                    <input name="saledategoods" id="saledategoods" type="date"
-                                        class="form-control" value="">
+                                    <input type="text" id="saledategoods" placeholder="Pilih Tanggal dan Waktu" autocomplete="off" />
+                                    <!-- <input name="saledategoods" id="saledategoods" type="date"
+                                        class="form-control" value=""> -->
                                 </div>
                                 <div class="col-md-6">
                                     <label>Tanggal Pembayaran</label>
@@ -223,7 +234,14 @@ include "../import.php"; ?>
                                 </div>
                             </div>
                         </div>
-                        
+                        <!-- <div class="form-group">
+                            <div class="row form-row">
+                                <label style="margin-left: 1.7%;">Waktu Penjualan/Pengiriman</label>
+                                <div class="col-md-2">
+                                    <input type="time" id="timegoods" name="timegoods" class="form-control">
+                                </div>
+                            </div>
+                        </div> -->
                         <div class="form-group" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                             <div class="pull-right">
                                 <button type="button" id="addbutton" name="addbutton" class="btn btn-success btn-cons"><i class="icon-ok"></i>
@@ -282,9 +300,44 @@ include "../import.php"; ?>
   </body>
 </html>
 
+<style>
+  #saledategoods {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    font-family: inherit;
+    font-size: inherit;
+    padding: 8px;
+    border-radius: 0px;
+    outline: none;
+    display: block;
+    margin: 0 0 20px 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+</style>
+
 
 <script>
     var allnewstock = [];
+
+    // Selected time should not be less than current time
+    function AdjustMinTime(ct) {
+      var dtob = new Date(),
+          current_date = dtob.getDate(),
+          current_month = dtob.getMonth() + 1,
+          current_year = dtob.getFullYear();
+            
+      var full_date = current_year + '-' +
+              ( current_month < 10 ? '0' + current_month : current_month ) + '-' + 
+                ( current_date < 10 ? '0' + current_date : current_date );
+
+      if(ct.dateFormat('Y-m-d') == full_date)
+        this.setOptions({ minTime: 0 });
+      else 
+        this.setOptions({ minTime: false });
+    }
+
+    // DateTimePicker plugin : http://xdsoft.net/jqplugins/datetimepicker/
+    $("#saledategoods").datetimepicker({ format: 'Y-m-d H:i', minDate: 0, minTime: 0, step: 5, onShow: AdjustMinTime, onSelectDate: AdjustMinTime });
 
     $('#addbutton').click(function(){
           var namegoods = $("#namegoods").val();
@@ -292,11 +345,38 @@ include "../import.php"; ?>
           var paydategoods = $("#paydategoods").val();
           var saledategoods = $("#saledategoods").val();
         
-        // if(namegoods == "" && stockgoods == "" && buylengthgoods == "" && buydategoods == ""){
-        //   alert("Tolong Lengkapi Data Terlebih Dahulu")
-        // }else{
+          // if(namegoods == "" && stockgoods == "" && buylengthgoods == "" && buydategoods == ""){
+          //   alert("Tolong Lengkapi Data Terlebih Dahulu")
+          // }else{
 
-          // alert(allbarang[0].key);
+          // alert(allbarang[0].nama_barang);
+          // alert("masuk");
+
+          // Date Application //
+          var date = $("#saledategoods").val().replace(' ', 'T') + ':00';
+          // alert(date);
+
+          var dateslice = date.slice(0, 10);
+          var timeslice = date.slice(11);
+          // alert(dateslice);
+          // alert(timeslice);
+
+          var timetemp = new Date(`1970-01-01T${timeslice}`);
+          timetemp.setMinutes(timetemp.getMinutes() + 30);
+          var newTimeString = timetemp.toTimeString().slice(0, 8);
+          // alert(newTimeString);
+
+          var dateTimeString = `${dateslice}T${newTimeString}`;
+          // alert(dateTimeString);
+
+          sessionStorage.setItem("starttime", date);
+          sessionStorage.setItem("endtime", dateTimeString);
+
+          // cek date type data //
+          // if (typeof date === typeof dateTimeString) {
+          //   alert("the same");
+          // }
+
 
           for (var i = 0; i < allbarang.length; i++){
             if(namegoods == allbarang[i].nama_barang){
@@ -304,13 +384,17 @@ include "../import.php"; ?>
                   namegoods: namegoods,
                   stockgoods: stockgoods,
                   paydategoods: paydategoods,
-                  saledategoods: saledategoods,
+                  saledategoods: dateTimeString,
                   firststockgoods: allbarang[i].stok_barang,
                   key: allbarang[i].key,
                   pricegoods: allbarang[i].harga_barang,
               });
             }
           }
+
+          // alert(allnewstock.length);
+
+          document.getElementById("namegoods").value = "";
 
           var str = "";
 

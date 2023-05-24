@@ -163,8 +163,8 @@ include "../import.php"; ?>
                                     <label class="form-label" style="font-size:20px; font-weight: bold; margin-top: 1%;">Buat Pesanan</label>
                                     <br><br>
                                     <center>
-                                      <label style="margin-bottom: 1%; font-size: 13px;">(Pesanan Secara Langsung)</label>
-                                      <button type="button" id="Plainorder" name="Plainorder" style="width: 95%; border-radius: 25px; height: 50px;" class="btn btn-success btn-cons"><i class="icon-ok"></i>Pesanan Tanpa Hotel</button>
+                                      <label style="margin-bottom: 1%; font-size: 13px;">(Jika Tempat Tidak Ada)</label>
+                                      <button type="button" id="Plainorder" name="Plainorder" style="width: 95%; border-radius: 25px; height: 50px;" class="btn btn-success btn-cons"><i class="icon-ok"></i>Daftar Tempat</button>
                                     </center>
                                     <!-- END Order Button Plain -->
                                 </div>
@@ -208,6 +208,10 @@ include "../import.php"; ?>
 
 
 <script>
+
+    $('#Plainorder').click(function(){
+      window.location.href = "tempatpesananmanual.php";
+    });
 
     // $(document).on("change",".cobachange",function(){
     //     var deskripsi = $("#cobachange").val();

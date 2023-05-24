@@ -1,7 +1,22 @@
+<?php
+    session_start();
+
+    require_once('google-calendar-api.php');
+    require_once('settings.php');
+
+    
+    $ceklogin = 0;
+    $login_url = "";
+    if(!isset($_SESSION['access_token'])) {
+        $login_url = 'https://accounts.google.com/o/oauth2/auth?scope=' . urlencode('https://www.googleapis.com/auth/calendar') . '&redirect_uri=' . urlencode(CLIENT_REDIRECT_URL) . '&response_type=code&client_id=' . CLIENT_ID . '&access_type=online';
+        $ceklogin = 1;
+    }
+    
+?>
+
 <!DOCTYPE html>
 <html>
 <?php 
-session_start();
 include "../import.php"; ?>
 <link rel="stylesheet" href="../inventory/tambahbarang.css">
 
@@ -84,7 +99,7 @@ include "../import.php"; ?>
                         <div class="form-group" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                             <div class="pull-right">
                                 <button type="button" id="saveNote" name="saveNote" style="border-radius: 5px; margin-bottom: 15px; background-color: #53a551; color: white;" class="btn btn-cons"><i class="icon-ok"></i>
-                                Simpan Catatan</button>
+                                Lanjut Transaksi</button>
                             </div>
                         </div>
                     </form>
@@ -133,62 +148,122 @@ include "../import.php"; ?>
 
     savenote.addEventListener('click', (e) => {
         e.preventDefault();
+
+        <?php
+            // $access_token = $_SESSION['access_token'];
+        ?>
         
-        // content note (catatan)
-        const content = document.querySelector('#content').value;
+        // alert(access_token);
         
-        if (content.trim() === '') {
-            alert('Please enter content for your note.');
-            return;
+        if(<?php echo $ceklogin; ?> == 1){
+            // alert("Login Akun Google Berhasil Silahkan Lanjutkan Transaksi");
+            // window.location.href = "<?php echo $login_url; ?>";
+            alert("Login Akun Google Terlebih Dahulu");
+            window.location.href = "/skripsi/apps/distribusi/google-login.php";
+            window.close();
+        }else {
+            // content note (catatan)
+            var content = document.querySelector('#content').value;
+            
+            if (content.trim() === '') {
+                content = "";
+            }
+
+            // attribute tempat distribusi
+            var diskey = sessionStorage.getItem('diskey');
+            var disnama = sessionStorage.getItem('disnama');
+            var disfoto = sessionStorage.getItem('disfoto');
+            var disalamat = sessionStorage.getItem('disalamat');
+            var disdeskripsi = sessionStorage.getItem('disdeskripsi');
+            var disdetailaddress = sessionStorage.getItem('disdetailaddress');
+            var dislatitude = sessionStorage.getItem('dislatitude');
+            var dislongitude = sessionStorage.getItem('dislongitude');
+
+            // attribute untuk pembelian
+            var allneworder = JSON.parse(sessionStorage.getItem('allneworder'));
+
+            // var output = "";
+
+            // for (var i = 0; i < allneworder.length; i++) {
+            // output += "{ name: \"" + allneworder[i].namegoods + "\", price: " + allneworder[i].pricegoods + " }\n";
+            // }
+
+            // alert(output);
+
+            // var dataorder = { allneworder: JSON.stringify(allneworder) };
+            
+            //to check data in the object
+            // alert(JSON.stringify(allneworder));
+            // alert(allneworder[0].namegoods);
+            // alert(allneworder[1].namegoods);
+
+            var descriptionvalue = "Barang - barang yang dikirim: \n";
+            for (var i = 0; i < allneworder.length; i++){
+                // alert(allneworder[i].namegoods);
+                var number = i + 1;
+                descriptionvalue += number.toString() + " " + allneworder[i].namegoods + " " + allneworder[i].stockgoods.toString() + "kg" + "\n";
+            }
+            if (content != ""){
+                descriptionvalue += "\nCatatan Pengiriman\n" + content;
+
+            }
+            // alert(descriptionvalue);
+
+            var endtimevalue = sessionStorage.getItem("endtime");
+            var stattimevalue = sessionStorage.getItem("starttime");
+
+            // alert(stattimevalue);
+            // alert(endtimevalue);
+
+
+            // // Event details //
+            parameters = { 	title: "Pengiriman Barang di " + disnama,
+                            location: disdetailaddress,
+                            description: descriptionvalue,
+                            event_time: {
+                                start_time: stattimevalue,
+                                end_time: endtimevalue,
+                                event_date: null
+                            },
+                            all_day: 0,
+                        };
+
+            $.ajax({
+                type: 'POST',
+                url: '../ajax/distribusi/codeaddpengiriman.php',
+                data: { notegoods:content,
+                        diskey:diskey,
+                        disnama:disnama,
+                        disfoto:disfoto,
+                        disalamat:disalamat,
+                        disdeskripsi:disdeskripsi,
+                        disdetailaddress:disdetailaddress,
+                        dislatitude:dislatitude,
+                        dislongitude:dislongitude,
+                        parameters: JSON.stringify(parameters),
+                        dataorder: JSON.stringify(allneworder),},
+                success: function(response) {
+                    // alert(response);
+                    // alert('Event created with ID : ' + response.event_id);
+                    alert("Pesanan Berhasil Dibuat");
+                    window.location.href = "pesanan.php";
+                    // allnewstock.length = 0;
+                    // var str = "";
+                    // $("#tablegoods").html(str);
+                    // // Reload the current page
+                    // location.reload();
+                },
+                error: function(a, err){
+                    //lakukan sesuatu untuk handle error
+                    alert("Data Gagal Disimpan");
+                    alert("Error: " + err);
+                    // alert(err.responseJSON.message);
+                },
+            });
         }
 
-        // attribute tempat distribusi
-        var diskey = sessionStorage.getItem('diskey');
-        var disnama = sessionStorage.getItem('disnama');
-        var disfoto = sessionStorage.getItem('disfoto');
-        var disalamat = sessionStorage.getItem('disalamat');
-        var disdeskripsi = sessionStorage.getItem('disdeskripsi');
-        var disdetailaddress = sessionStorage.getItem('disdetailaddress');
-        var dislatitude = sessionStorage.getItem('dislatitude');
-        var dislongitude = sessionStorage.getItem('dislongitude');
 
-        // attribute untuk pembelian
-        var allneworder = JSON.parse(sessionStorage.getItem('allneworder'));
-        // var dataorder = { allneworder: JSON.stringify(allneworder) };
         
-        //to check data in the object
-        // alert(JSON.stringify(allneworder));
-        // alert(allneworder[0].namegoods);
-        // alert(allneworder[1].namegoods);
-
-        $.ajax({
-            type: 'POST',
-            url: '../ajax/distribusi/codeaddpengiriman.php',
-            data: { notegoods:content,
-                    diskey:diskey,
-                    disnama:disnama,
-                    disfoto:disfoto,
-                    disalamat:disalamat,
-                    disdeskripsi:disdeskripsi,
-                    disdetailaddress:disdetailaddress,
-                    dislatitude:dislatitude,
-                    dislongitude:dislongitude,
-                    dataorder: JSON.stringify(allneworder),},
-            success: function(response) {
-                // console.log(response);
-                alert("Data Berhasil Disimpan");
-                // allnewstock.length = 0;
-                // var str = "";
-                // $("#tablegoods").html(str);
-                // // Reload the current page
-                // location.reload();
-            },
-            error: function(a, err){
-                //lakukan sesuatu untuk handle error
-                alert("Data Gagal Disimpan");
-            },
-        });
-
         // const note = document.createElement('li');
         // alert(content);
         // note.innerHTML = `
