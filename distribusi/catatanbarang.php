@@ -246,6 +246,7 @@ include "../import.php"; ?>
                     // alert(response);
                     // alert('Event created with ID : ' + response.event_id);
                     alert("Pesanan Berhasil Dibuat");
+                    // alert(response);
                     window.location.href = "pesanan.php";
                     // allnewstock.length = 0;
                     // var str = "";
