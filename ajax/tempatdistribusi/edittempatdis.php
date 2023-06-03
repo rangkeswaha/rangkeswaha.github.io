@@ -39,52 +39,72 @@
         }
 
 
-        $postData = [
-            'nama_pembeli' => $nama,
-            'alamat_pembeli' => $alamat,
-            'deskripsi_pembeli' => $deskripsi,
-            'foto_pembeli' => $target_file,
-        ];
+        // $postData = [
+        //     'nama_pembeli' => $nama,
+        //     'alamat_pembeli' => $alamat,
+        //     'deskripsi_pembeli' => $deskripsi,
+        //     'foto_pembeli' => $target_file,
+        // ];
 
-        // Create a key for a new post
-        $newPostKey = $database->getReference('distribusi')->push()->getKey();
+        // // Create a key for a new post
+        // $newPostKey = $database->getReference('distribusi')->push()->getKey();
 
-        $updates = [
-            'distribusi/'.$uid => $postData,
-            // 'mkategori/'.$uid.'/'.$newPostKey => $postData,
-        ];
+        // $updates = [
+        //     'distribusi/'.$uid => $postData,
+        //     // 'mkategori/'.$uid.'/'.$newPostKey => $postData,
+        // ];
 
-        $database->getReference() // this is the root reference
-            ->update($updates);
-        echo ("Tempat Berhasil Diganti");
+        // $database->getReference() // this is the root reference
+        //     ->update($updates);
+        // echo ("Tempat Berhasil Diganti");
 
         // move_uploaded_file($_FILES['fotobarang']['tmp_name'], "uploads/". $new_image);
 
         // header("Location: ../../inventory/stokbarang.php");
 
+        $updatedata = [
+            'nama_pembeli' => $nama,
+            'alamat_pembeli' => $alamat,
+            'deskripsi_pembeli' => $deskripsi,
+            'foto_pembeli' => $target_file,
+        ];
+    
+        $reftable = 'distribusi/' . $uid;
+        $database->getReference($reftable)->update($updatedata);
+
     }else{
         $uid = $key;
 
-        $postData = [
+        // $postData = [
+        //     'nama_pembeli' => $nama,
+        //     'alamat_pembeli' => $alamat,
+        //     'deskripsi_pembeli' => $deskripsi,
+        //     'foto_pembeli' => $oldfoto,
+        // ];
+
+        // // Create a key for a new post
+        // $newPostKey = $database->getReference('distribusi')->push()->getKey();
+
+        // $updates = [
+        //     'distribusi/'.$uid => $postData,
+        //     // 'mkategori/'.$uid.'/'.$newPostKey => $postData,
+        // ];
+
+        // $database->getReference() // this is the root reference
+        //     ->update($updates);
+        // echo ("Tempat Berhasil Diganti");
+
+        // header("Location: ../../inventory/stokbarang.php");
+
+        $updatedata = [
             'nama_pembeli' => $nama,
             'alamat_pembeli' => $alamat,
             'deskripsi_pembeli' => $deskripsi,
             'foto_pembeli' => $oldfoto,
         ];
-
-        // Create a key for a new post
-        $newPostKey = $database->getReference('distribusi')->push()->getKey();
-
-        $updates = [
-            'distribusi/'.$uid => $postData,
-            // 'mkategori/'.$uid.'/'.$newPostKey => $postData,
-        ];
-
-        $database->getReference() // this is the root reference
-            ->update($updates);
-        echo ("Tempat Berhasil Diganti");
-
-        // header("Location: ../../inventory/stokbarang.php");
+    
+        $reftable = 'distribusi/' . $uid;
+        $database->getReference($reftable)->update($updatedata);
 
     }
 

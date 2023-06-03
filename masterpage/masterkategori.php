@@ -286,8 +286,6 @@
                 </div>
             </div>
         </div>
-        <!-- Start Chat -->
-        <?php include "../chat.php"; ?>
     </div>
     <!-- END CONTAINER -->
     

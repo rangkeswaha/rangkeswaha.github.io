@@ -472,6 +472,7 @@ include "../import.php"; ?>
 
 <!-- Script for the map on page -->
 <script>
+    // setInterval(initMap, 1000);
     function initMap() {
         // Get user location
         navigator.geolocation.getCurrentPosition(function(position) {

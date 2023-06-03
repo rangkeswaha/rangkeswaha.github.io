@@ -256,8 +256,16 @@ include "../import.php"; ?>
                 },
                 error: function(a, err){
                     //lakukan sesuatu untuk handle error
-                    alert("Data Gagal Disimpan");
-                    alert("Error: " + err);
+                    // alert("Data Gagal Disimpan");
+                    // alert("Error: " + err);
+                    alert("Login Akun Google Terlebih Dahulu");
+                    <?php 
+                    
+                    // unset($_SESSION['access_token']); 
+                    
+                    ?>
+                    window.location.href = "/skripsi/apps/distribusi/google-login.php";
+                    window.close();
                     // alert(err.responseJSON.message);
                 },
             });
