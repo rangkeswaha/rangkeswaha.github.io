@@ -27,6 +27,7 @@ include "../import.php"; ?>
 <script>
 
     $(document).ready(function(){
+        // alert(sessionStorage.getItem("totalHargaPembayaran"));
         $('body').tooltip({selector: '[data-toggle="tooltip"]'});
 
         // Retrieve the string from session storage and convert it back to an array
@@ -155,7 +156,13 @@ include "../import.php"; ?>
         
         // alert(access_token);
         
-        if(<?php echo $ceklogin; ?> == 1){
+        if(<?php $ceklogin = 0;
+    $login_url = "";
+    if(!isset($_SESSION['access_token'])) {
+        $login_url = 'https://accounts.google.com/o/oauth2/auth?scope=' . urlencode('https://www.googleapis.com/auth/calendar') . '&redirect_uri=' . urlencode(CLIENT_REDIRECT_URL) . '&response_type=code&client_id=' . CLIENT_ID . '&access_type=online';
+        $ceklogin = 1;
+    } 
+    echo $ceklogin; ?> == 1){
             // alert("Login Akun Google Berhasil Silahkan Lanjutkan Transaksi");
             // window.location.href = "<?php echo $login_url; ?>";
             alert("Login Akun Google Terlebih Dahulu");
@@ -197,6 +204,7 @@ include "../import.php"; ?>
             // alert(allneworder[0].namegoods);
             // alert(allneworder[1].namegoods);
 
+            // description for pengiriman //
             var descriptionvalue = "Barang - barang yang dikirim: \n";
             for (var i = 0; i < allneworder.length; i++){
                 // alert(allneworder[i].namegoods);
@@ -209,20 +217,47 @@ include "../import.php"; ?>
             }
             // alert(descriptionvalue);
 
+            // description for pembayaran //
+            var paydescriptionvalue = "Barang - barang yang dikirim: \n";
+            for (var i = 0; i < allneworder.length; i++){
+                // alert(allneworder[i].namegoods);
+                var paynumber = i + 1;
+                paydescriptionvalue += paynumber.toString() + " " + allneworder[i].namegoods + " " + allneworder[i].stockgoods.toString() + "kg" + "\n";
+            }
+            paydescriptionvalue += "\nTotal Pembayaran : Rp " + sessionStorage.getItem("totalHargaPembayaran");
+            // alert(descriptionvalue);
+
+            // Pengiriman //
             var endtimevalue = sessionStorage.getItem("endtime");
             var stattimevalue = sessionStorage.getItem("starttime");
+
+            // Pembayaran //
+            var payendtimevalue = sessionStorage.getItem("payendtime");
+            var paystattimevalue = sessionStorage.getItem("paystarttime");
 
             // alert(stattimevalue);
             // alert(endtimevalue);
 
 
-            // // Event details //
+            // // Event details Pengiriman //
             parameters = { 	title: "Pengiriman Barang di " + disnama,
                             location: disdetailaddress,
                             description: descriptionvalue,
                             event_time: {
                                 start_time: stattimevalue,
                                 end_time: endtimevalue,
+                                event_date: null
+                            },
+                            all_day: 0,
+                        };
+
+            // // Event details Pembayaran //
+            parametersPembayaran = { 	title: "Pembayaran Barang di " + disnama,
+                            location: disdetailaddress,
+                            description: paydescriptionvalue,
+                            event_time: {
+                                start_time: paystattimevalue,
+                                end_time: payendtimevalue,
                                 event_date: null
                             },
                             all_day: 0,
@@ -241,6 +276,7 @@ include "../import.php"; ?>
                         dislatitude:dislatitude,
                         dislongitude:dislongitude,
                         parameters: JSON.stringify(parameters),
+                        parametersPembayaran: JSON.stringify(parametersPembayaran),
                         dataorder: JSON.stringify(allneworder),},
                 success: function(response) {
                     // alert(response);

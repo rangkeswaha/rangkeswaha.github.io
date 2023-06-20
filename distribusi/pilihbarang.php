@@ -17,7 +17,7 @@ include "../import.php"; ?>
 <script>
     // untuk membatasi grid yang ditampilkan
     // var defaultgrid = 5;
-    
+    var cekdisable = 0;
     var allbarang;
 
     function getbarang() {
@@ -227,10 +227,16 @@ include "../import.php"; ?>
                                     <!-- <input name="saledategoods" id="saledategoods" type="date"
                                         class="form-control" value=""> -->
                                 </div>
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <label>Tanggal Pembayaran</label>
                                     <input name="paydategoods" id="paydategoods" type="date"
                                         class="form-control" value="">
+                                </div> -->
+                                <div class="col-md-6">
+                                    <label>Tanggal Pembayaran</label>
+                                    <input type="text" id="paydategoods" placeholder="Pilih Tanggal dan Waktu" autocomplete="off" />
+                                    <!-- <input name="saledategoods" id="saledategoods" type="date"
+                                        class="form-control" value=""> -->
                                 </div>
                             </div>
                         </div>
@@ -313,11 +319,25 @@ include "../import.php"; ?>
     width: 100%;
     box-sizing: border-box;
   }
+
+  #paydategoods {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    font-family: inherit;
+    font-size: inherit;
+    padding: 8px;
+    border-radius: 0px;
+    outline: none;
+    display: block;
+    margin: 0 0 20px 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
 </style>
 
 
 <script>
     var allnewstock = [];
+    var totalHarga = 0;
 
     // Selected time should not be less than current time
     function AdjustMinTime(ct) {
@@ -338,12 +358,14 @@ include "../import.php"; ?>
 
     // DateTimePicker plugin : http://xdsoft.net/jqplugins/datetimepicker/
     $("#saledategoods").datetimepicker({ format: 'Y-m-d H:i', minDate: 0, minTime: 0, step: 5, onShow: AdjustMinTime, onSelectDate: AdjustMinTime });
+    $("#paydategoods").datetimepicker({ format: 'Y-m-d H:i', minDate: 0, minTime: 0, step: 5, onShow: AdjustMinTime, onSelectDate: AdjustMinTime });
 
     $('#addbutton').click(function(){
           var namegoods = $("#namegoods").val();
           var stockgoods = $("#stockgoods").val();
           var paydategoods = $("#paydategoods").val();
           var saledategoods = $("#saledategoods").val();
+
         
           // if(namegoods == "" && stockgoods == "" && buylengthgoods == "" && buydategoods == ""){
           //   alert("Tolong Lengkapi Data Terlebih Dahulu")
@@ -352,7 +374,7 @@ include "../import.php"; ?>
           // alert(allbarang[0].nama_barang);
           // alert("masuk");
 
-          // Date Application //
+          // Date Application Pengiriman //
           var date = $("#saledategoods").val().replace(' ', 'T') + ':00';
           // alert(date);
 
@@ -377,9 +399,31 @@ include "../import.php"; ?>
           //   alert("the same");
           // }
 
+          // Date Application Pembayaran //
+          var paydate = $("#paydategoods").val().replace(' ', 'T') + ':00';
+          // alert(paydate);
+
+          var paydateslice = paydate.slice(0, 10);
+          var paytimeslice = paydate.slice(11);
+          // alert(dateslice);
+          // alert(timeslice);
+
+          var paytimetemp = new Date(`1970-01-01T${paytimeslice}`);
+          paytimetemp.setMinutes(paytimetemp.getMinutes() + 30);
+          var paynewTimeString = paytimetemp.toTimeString().slice(0, 8);
+          // alert(newTimeString);
+
+          var paydateTimeString = `${paydateslice}T${paynewTimeString}`;
+          // alert(dateTimeString);
+
+          sessionStorage.setItem("paystarttime", paydate);
+          sessionStorage.setItem("payendtime", paydateTimeString);
+
+          
 
           for (var i = 0; i < allbarang.length; i++){
             if(namegoods == allbarang[i].nama_barang){
+              cekdisable++;
               allnewstock.push({
                   namegoods: namegoods,
                   stockgoods: stockgoods,
@@ -410,6 +454,13 @@ include "../import.php"; ?>
 
           // '<p>Stok '+data[i].stok_barang+'kg</p> '+
           $("#tablegoods").html(str);
+
+          if(cekdisable > 0){
+            document.getElementById("paydategoods").disabled = true;
+            document.getElementById("saledategoods").disabled = true;
+          }
+
+          // alert(allnewstock[0].pricegoods);
         // }
     });
 
@@ -443,7 +494,19 @@ include "../import.php"; ?>
       // Convert the array to a string and store it in session storage
       sessionStorage.setItem('allneworder', JSON.stringify(allnewstock));
 
+      // alert(allnewstock[0].stok_barang);
+      // alert(allbarang[0].nama_barang);
+
+      for (var i = 0; i < allnewstock.length; i++){
+        totalHarga += parseInt(allnewstock[i].stockgoods) * parseInt(allnewstock[i].pricegoods);
+      }
+
+      sessionStorage.setItem('totalHargaPembayaran', totalHarga);
+
+      // alert(totalHarga);
+
       window.location.href = "catatanbarang.php";
+
     });
 
     // $(document).ready(function() {
@@ -484,6 +547,14 @@ include "../import.php"; ?>
         var selected = this;
         var id = this.id;
         // alert(id);
+
+        cekdisable--;
+        // alert(cekdisable);
+
+        if(cekdisable <= 0){
+          document.getElementById("paydategoods").disabled = false;
+          document.getElementById("saledategoods").disabled = false;
+        }
 
         var split = id.split("_");
 

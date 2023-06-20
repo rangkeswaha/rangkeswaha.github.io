@@ -133,7 +133,7 @@ include "../import.php"; ?>
         });
 
         $.ajax({
-            url: "../ajax/laporanstok/ROP.php",
+            url: "../ajax/laporanstok/ROPsecond.php",
             type:"post",
             data:{
                 keybulan:monthValue,

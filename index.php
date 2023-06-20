@@ -5,9 +5,184 @@ session_start();
 
 ?>
 
+<?php include "import.php"; ?>
+
+<style>
+    #gambartooltip {
+        width:100%;
+        height:100%;
+    }
+    .tooltip-inner {
+        width: 150px;
+        height: 120px;
+        /* padding-left: 40%; */
+    }
+    td.details-control {
+        background: url('https://www.datatables.net/examples/resources/details_open.png') no-repeat center center;
+        cursor: pointer;
+    }
+    tr.shown td.details-control {
+        background: url('https://www.datatables.net/examples/resources/details_close.png') no-repeat center center;
+    }
+</style>
+
+<script>
+
+  function refreshTable(){
+        $('#example').DataTable( {
+            responsive: true,
+            "ajax": {
+                "url": "ajax/notifikasi/getlistbarangdashboard.php",
+                "dataSrc": ""
+            },
+            "columns": [
+                { "render": function (data, type, row, meta) { // Tampilkan kolom aksi
+                        var html1  = "<button type='button' class='btn btn-secondary viewimage' id='ajax/tempatdistribusi/" + row.foto_pembeli + "' data-toggle='tooltip' data-html='true' title=\"<img id='gambartooltip'src='ajax/tempatdistribusi/" + row.foto_pembeli + "'>\">"+row.nama_pembeli+"</button>";
+                        return html1;
+                    }
+                },
+                // { "data": "nama_pembeli" },
+                { "data": "jumlah_barang" },
+                { "data": "total_harga" },
+                { "data": "tanggal_pengiriman" },
+                { "data": "tanggal_pembayaran" },
+                { "data": "status_penjualan" },
+                // { "render": function (data, type, row, meta) { // Tampilkan kolom aksi
+                //         var html2 = "<td> <button type='button' id='"+row.key+".."+row.nama_pembeli+".."+row.jumlah_barang+".."+row.total_harga+".."+row.tanggal_pengiriman+".."+row.tanggal_pembayaran+".."+row.status_penjualan+".."+row.savedetail_address+".."+row.savelatitude+".."+row.savelongitude+".."+row.id_Nota_penjualan+"' class='btn btn-info detailpengiriman'></i>Detail Pengiriman</button></td>";
+                //         return html2;
+                //     }
+                // },
+                // { "render": function (data, type, row, meta) { // Tampilkan kolom aksi
+                //         var html1  = "<td> <buttton type='button' id='"+row.id_Nota_penjualan+".."+row.tanggal_pengiriman+"' class='btn btn-info notapengiriman'>Nota Pengiriman</button></td>";
+                //         return html1;
+                //     }
+                // },
+            ]
+        });
+    }
+
+    function refreshTablenotifikasi(){
+        $('#examplenotifikasi').DataTable( {
+            responsive: true,
+            "ajax": {
+                "url": "ajax/notifikasi/getnotifikasi.php",
+                "dataSrc": ""
+            },
+            "columns": [
+                { "render": function (data, type, row, meta) { // Tampilkan kolom aksi
+                        var html1  = "<button type='button' class='btn btn-secondary viewimage' id='ajax/tempatdistribusi/" + row.foto_pembeli + "' data-toggle='tooltip' data-html='true' title=\"<img id='gambartooltip'src='ajax/tempatdistribusi/" + row.foto_pembeli + "'>\">"+row.nama_pembeli+"</button>";
+                        return html1;
+                    }
+                },
+                // { "data": "nama_pembeli" },
+                { "data": "jumlah_barang" },
+                { "data": "total_harga" },
+                { "data": "tanggal_pengiriman" },
+                { "data": "tanggal_pembayaran" },
+                { "data": "status_penjualan" },
+                // { "render": function (data, type, row, meta) { // Tampilkan kolom aksi
+                //         var html2 = "<td> <button type='button' id='"+row.key+".."+row.nama_pembeli+".."+row.jumlah_barang+".."+row.total_harga+".."+row.tanggal_pengiriman+".."+row.tanggal_pembayaran+".."+row.status_penjualan+".."+row.savedetail_address+".."+row.savelatitude+".."+row.savelongitude+".."+row.id_Nota_penjualan+"' class='btn btn-info detailpengiriman'></i>Detail Pengiriman</button></td>";
+                //         return html2;
+                //     }
+                // },
+                // { "render": function (data, type, row, meta) { // Tampilkan kolom aksi
+                //         var html1  = "<td> <buttton type='button' id='"+row.id_Nota_penjualan+".."+row.tanggal_pengiriman+"' class='btn btn-info notapengiriman'>Nota Pengiriman</button></td>";
+                //         return html1;
+                //     }
+                // },
+            ]
+        });
+    }
+
+    $(document).on("click",".viewimage",function(){
+        var selected = this;
+        var id = this.id;
+
+        var split = id.split("..");
+
+        // alert(split[1]);
+
+        // window.location.replace("/skripsi/apps" + split[1]);
+        window.location.href = "/skripsi/apps" + split[1];
+
+       
+    });
+
+    $(document).on("click",".detailpengiriman",function(){
+        var selected = this;
+        var id = this.id;
+
+        var split = id.split("..");
+
+        // alert(split[0]);
+        // alert(split[1]);
+        // alert(split[2]);
+        // alert(split[3]);
+        // alert(split[4]);
+        // alert(split[5]);
+        // alert(split[6]);
+        // alert(split[7]);
+        // alert(split[8]);
+        // alert(split[9]);
+        // alert(split[10]);
+
+        // document.getElementById("imagePlaceModal").src= "/skripsi/apps/ajax/tempatdistribusi/" + split[3];
+        // document.getElementById("namePlaceModal").value = split[4];
+        // document.getElementById('deskripsiTempatModal').value = split[2];
+        // document.getElementById('addressPlaceModal').value = split[1];
+
+        // data detail //
+        sessionStorage.setItem("detailpengirimankey", split[0]);
+        sessionStorage.setItem("detailpengirimannamapembeli", split[1]);
+        sessionStorage.setItem("detailpengirimanjumlahbarang", split[2]);
+        sessionStorage.setItem("detailpengirimantotalharga", split[3]);
+        sessionStorage.setItem("detailpengirimantanggalpengiriman", split[4]);
+        sessionStorage.setItem("detailpengirimantanggalpembayaran", split[5]);
+        sessionStorage.setItem("detailpengirimanstatuspenjualan", split[6]);
+        sessionStorage.setItem("detailpengirimandetailaddress", split[7]);
+        sessionStorage.setItem("detailpengirimanlatitude", split[8]);
+        sessionStorage.setItem("detailpengirimanlongitude", split[9]);
+        sessionStorage.setItem("detailpengirimanidnota", split[10]);
+        window.location.href = "detailpesanan.php";
+
+
+        // sessionStorage.setItem("key", split[0]);
+
+        // modal = document.getElementById("myModal");
+        // modal.style.display = "block";
+
+
+        // $("#formeditkategori").attr("value", "");
+        // $("#formeditkategori").attr("value", kategoriawal);
+        // document.getElementById('formeditkategori').value = kategoriawal;
+
+        // alert(kategoriawal);
+    });
+
+    $(document).on("click",".notapengiriman",function(){
+        var selected = this;
+        var id = this.id;
+
+        var split = id.split("..");
+
+        // alert(split);
+
+        // data nota //
+        sessionStorage.setItem("notaid", split[0]);
+        sessionStorage.setItem("notapengiriman", split[1]);
+        window.location.href = "notapesanan.php";
+
+    });
+
+    $(document).ready(function(){
+        refreshTable();
+        refreshTablenotifikasi();
+        $('body').tooltip({selector: '[data-toggle="tooltip"]'});
+    });
+</script>
+
 <!DOCTYPE html>
 <html>
-<?php include "import.php"; ?>
   <!-- END HEAD -->
   <!-- BEGIN BODY -->
   <body class="">
@@ -32,8 +207,8 @@ session_start();
         <div class="clearfix"></div>
         <div class="content ">
           <div class="page-title">
-            <h3>Dashboard </h3>
-            <div style="display:flex; ">
+            <h2>Dashboard</h2>
+            <!-- <div style="display:flex; ">
                 <button class="w3-button w3-black" style="border-radius: 15px;">Home</button>
                 &nbsp;
                 &nbsp;
@@ -41,13 +216,13 @@ session_start();
                 &nbsp;
                 &nbsp;
                 <button class="w3-button w3-black" style="border-radius: 15px;">Notifikasi <span class="badge badge-important">1</span></button>
-            </div>
+            </div> -->
           </div>
           <br>
           <div class="grid simple form-grid">
               <div class="grid-body no-border" style="border-radius: 10px;">
                   <br>
-                  <form action="../ajax/inventory/codeaddbarangfix.php" method="POST" enctype="multipart/form-data">
+                  <!-- <form action="../ajax/inventory/codeaddbarangfix.php" method="POST" enctype="multipart/form-data">
                       <div class="form-group">
                           <div class="row form-row">
                               <div class="col-md-12">
@@ -57,372 +232,70 @@ session_start();
                               </div>
                           </div>
                       </div>
+                  </form> -->
+                  <form id="formDaftarTempat">
+                      <!-- table list Notifikasi -->
+                      <h3>Tabel <span class="semi-bold">List Notifikasi Pembayaran</span></h3>
+                      <!-- <p>Type something in the input field to search the table value</p>  
+                      <input class="form-control" id="myInput" type="text" placeholder="Search..">   -->
+                      <br>
+                      <div class="table-responsive">
+                          <table id="examplenotifikasi" class="table table-hover table-striped" style="width:100%">
+                              <thead>
+                              <tr>
+                                  <th>Nama Penerima</th>
+                                  <th>Total Barang</th>
+                                  <th>Total Harga</th>
+                                  <th>Tanggal Pengiriman</th>
+                                  <th>Tanggal Pembayaran</th>
+                                  <th>Status</th>
+                                  <!-- <th>Detail</th>
+                                  <th>Nota</th> -->
+                              </tr>
+                              </thead>
+                              <tbody>
+                                  
+                              </tbody>
+                          </table>
+                      </div>
+
+                      <br><br>
+                  </form>
+              </div>
+          </div>
+          <div class="grid simple form-grid">
+              <div class="grid-body no-border" style="border-radius: 10px;">
+                  <br>
+                  <form id="formDaftarTempat">
+                      <!-- table list Pesanan -->
+                      <h3>Tabel <span class="semi-bold">List Pesanan</span></h3>
+                      <!-- <p>Type something in the input field to search the table value</p>  
+                      <input class="form-control" id="myInput" type="text" placeholder="Search..">   -->
+                      <br>
+                      <div class="table-responsive">
+                          <table id="example" class="table table-hover table-striped" style="width:100%">
+                              <thead>
+                              <tr>
+                                  <th>Nama Penerima</th>
+                                  <th>Total Barang</th>
+                                  <th>Total Harga</th>
+                                  <th>Tanggal Pengiriman</th>
+                                  <th>Tanggal Pembayaran</th>
+                                  <th>Status</th>
+                                  <!-- <th>Detail</th>
+                                  <th>Nota</th> -->
+                              </tr>
+                              </thead>
+                              <tbody>
+                                  
+                              </tbody>
+                          </table>
+                      </div>
                   </form>
               </div>
           </div>
           <div id="container">
-            <!-- <div class="row 2col">
-              <div class="col-md-3 col-sm-6 spacing-bottom-sm spacing-bottom">
-                <div class="tiles blue added-margin">
-                  <div class="tiles-body">
-                    <div class="controller">
-                      <a href="javascript:;" class="reload"></a>
-                      <a href="javascript:;" class="remove"></a>
-                    </div>
-                    <div class="tiles-title"> TODAY’S SERVER LOAD </div>
-                    <div class="heading"> <span class="animate-number" data-value="26.8" data-animation-duration="1200">0</span>% </div>
-                    <div class="progress transparent progress-small no-radius">
-                      <div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="26.8%"></div>
-                    </div>
-                    <div class="description"><i class="icon-custom-up"></i><span class="text-white mini-description ">&nbsp; 4% higher <span class="blend">than last month</span></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-3 col-sm-6 spacing-bottom-sm spacing-bottom">
-                <div class="tiles green added-margin">
-                  <div class="tiles-body">
-                    <div class="controller">
-                      <a href="javascript:;" class="reload"></a>
-                      <a href="javascript:;" class="remove"></a>
-                    </div>
-                    <div class="tiles-title"> TODAY’S VISITS </div>
-                    <div class="heading"> <span class="animate-number" data-value="2545665" data-animation-duration="1000">0</span> </div>
-                    <div class="progress transparent progress-small no-radius">
-                      <div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="79%"></div>
-                    </div>
-                    <div class="description"><i class="icon-custom-up"></i><span class="text-white mini-description ">&nbsp; 2% higher <span class="blend">than last month</span></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-3 col-sm-6 spacing-bottom">
-                <div class="tiles red added-margin">
-                  <div class="tiles-body">
-                    <div class="controller">
-                      <a href="javascript:;" class="reload"></a>
-                      <a href="javascript:;" class="remove"></a>
-                    </div>
-                    <div class="tiles-title"> TODAY’S SALES </div>
-                    <div class="heading"> $ <span class="animate-number" data-value="14500" data-animation-duration="1200">0</span> </div>
-                    <div class="progress transparent progress-white progress-small no-radius">
-                      <div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="45%"></div>
-                    </div>
-                    <div class="description"><i class="icon-custom-up"></i><span class="text-white mini-description ">&nbsp; 5% higher <span class="blend">than last month</span></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-3 col-sm-6">
-                <div class="tiles purple added-margin">
-                  <div class="tiles-body">
-                    <div class="controller">
-                      <a href="javascript:;" class="reload"></a>
-                      <a href="javascript:;" class="remove"></a>
-                    </div>
-                    <div class="tiles-title"> TODAY’S FEEDBACKS </div>
-                    <div class="row-fluid">
-                      <div class="heading"> <span class="animate-number" data-value="1600" data-animation-duration="700">0</span> </div>
-                      <div class="progress transparent progress-white progress-small no-radius">
-                        <div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="12%"></div>
-                      </div>
-                    </div>
-                    <div class="description"><i class="icon-custom-up"></i><span class="text-white mini-description ">&nbsp; 3% higher <span class="blend">than last month</span></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-            <!-- <div class="row"> -->
-              <!-- <div class="col-md-8 spacing-bottom">
-                <div class="row tiles-container tiles white spacing-bottom">
-                  <div class="tile-more-content col-md-4 col-sm-4 no-padding">
-                    <div class="tiles green">
-                      <div class="tiles-body">
-                        <div class="heading"> Statistical </div>
-                        <p>Status : live</p>
-                      </div>
-                      <div class="tile-footer">
-                        <div class="iconplaceholder"><i class="fa fa-map-marker"></i></div>
-                        258 Countries, 4835 Cities </div>
-                    </div>
-                    <div class="tiles-body">
-                      <ul class="progress-list">
-                        <li>
-                          <div class="details-wrapper">
-                            <div class="name">Foreign Visits</div>
-                            <div class="description">Our Overseas visits</div>
-                          </div>
-                          <div class="details-status pull-right"> <span class="animate-number" data-value="89" data-animation-duration="800">0</span>% </div>
-                          <div class="clearfix"></div>
-                          <div class="progress progress-small no-radius">
-                            <div class="progress-bar progress-bar-success animate-progress-bar" data-percentage="89%"></div>
-                          </div>
-                        </li>
-                        <li>
-                          <div class="details-wrapper">
-                            <div class="name">Local Visits</div>
-                            <div class="description">Our Overseas visits</div>
-                          </div>
-                          <div class="details-status pull-right"> <span class="animate-number" data-value="45" data-animation-duration="600">0</span>% </div>
-                          <div class="clearfix"></div>
-                          <div class="progress progress-small no-radius ">
-                            <div class="progress-bar progress-bar-warning animate-progress-bar" data-percentage="45%"></div>
-                          </div>
-                        </li>
-                        <li>
-                          <div class="details-wrapper">
-                            <div class="name">Other Visits</div>
-                            <div class="description">Our Overseas visits</div>
-                          </div>
-                          <div class="details-status pull-right"> <span class="animate-number" data-value="12" data-animation-duration="200">0</span>% </div>
-                          <div class="clearfix"></div>
-                          <div class="progress progress-small no-radius">
-                            <div class="progress-bar progress-bar-danger animate-progress-bar" data-percentage="12%"></div>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="tiles white col-md-8 col-sm-8 no-padding">
-                    <div class="tiles-chart">
-                      <div class="controller">
-                        <a href="javascript:;" class="reload"></a>
-                        <a href="javascript:;" class="remove"></a>
-                      </div>
-                      <div class="tiles-body">
-                        <div class="tiles-title">GEO-LOCATIONS</div>
-                        <div class="heading"> 8,545,654 <i class="fa fa-map-marker"></i> </div>
-                      </div>
-                      <div id="world-map" style="height:405px"></div>
-                    </div>
-                    <div class="clearfix"></div>
-                  </div>
-                </div>
-                <div class="row tiles-container spacing-bottom tiles grey">
-                  <div class="tiles white col-md-8 col-sm-8 no-padding">
-                    <div class="tiles-body">
-                      <div class="row">
-                        <div class="col-md-6 col-sm-6">
-                          <div class="mini-chart-wrapper">
-                            <div class="chart-details-wrapper">
-                              <div class="chartname"> New Orders </div>
-                              <div class="chart-value"> 17,555 </div>
-                            </div>
-                            <div class="mini-chart">
-                              <div id="mini-chart-orders"></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                          <div class="mini-chart-wrapper">
-                            <div class="chart-details-wrapper">
-                              <div class="chartname"> My Balance </div>
-                              <div class="chart-value"> $17,555 </div>
-                            </div>
-                            <div class="mini-chart">
-                              <div id="mini-chart-other"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <br>
-                    <div id="ricksaw"></div>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="col-md-4 col-sm-4 no-padding">
-                    <div class="tiles grey ">
-                      <div class="tiles white no-margin">
-                        <div class="tiles-body">
-                          <div class="tiles-title blend"> OVERALL VIEWS </div>
-                          <div class="heading"> <span data-animation-duration="1000" data-value="432852" class="animate-number">0</span> </div>
-                          44% higher <span class="blend">than last month</span> </div>
-                      </div>
-                      <div id="legend"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-8 col-sm-8">
-                    <div class="tiles white">
-                      <div class="tiles-body">
-                        <div class="controller">
-                          <a href="javascript:;" class="reload"></a>
-                          <a href="javascript:;" class="remove"></a>
-                        </div>
-                        <div class="tiles-title"> NOTIFICATIONS </div>
-                        <br>
-                        <div class="notification-messages info">
-                          <div class="user-profile"> <img src="assets/img/profiles/c.jpg" alt="" data-src="assets/img/profiles/c.jpg" data-src-retina="assets/img/profiles/c2x.jpg" width="35" height="35"> </div>
-                          <div class="message-wrapper">
-                            <div class="heading"> David Nester - Commented on your wall </div>
-                            <div class="description"> Meeting postponed to tomorrow </div>
-                          </div>
-                          <div class="date pull-right"> Just now </div>
-                          <div class="clearfix"></div>
-                        </div>
-                        <div class="notification-messages danger">
-                          <div class="iconholder"> <i class="icon-warning-sign"></i> </div>
-                          <div class="message-wrapper">
-                            <div class="heading"> Server load limited </div>
-                            <div class="description"> Database server has reached its daily capicity </div>
-                          </div>
-                          <div class="date pull-right"> Yesterday </div>
-                          <div class="clearfix"></div>
-                        </div>
-                        <div class="notification-messages success">
-                          <div class="user-profile"> <img src="assets/img/profiles/h.jpg" alt="" data-src="assets/img/profiles/h.jpg" data-src-retina="assets/img/profiles/h2x.jpg" width="35" height="35"> </div>
-                          <div class="message-wrapper">
-                            <div class="heading"> You have've got 150 messages </div>
-                            <div class="description"> 150 newly unread messages in your inbox </div>
-                          </div>
-                          <div class="date pull-right"> Yesterday </div>
-                          <div class="clearfix"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-4 col-sm-4 no-padding">
-                    <div class="tiles red weather-widget ">
-                      <div class="tiles-body">
-                        <div class="controller">
-                          <a href="javascript:;" class="reload"></a>
-                          <a href="javascript:;" class="remove"></a>
-                        </div>
-                        <div class="tiles-title"> TODAY’S WEATHER </div>
-                        <div class="heading">
-                          <div class="pull-left"> Tuesday </div>
-                          <div class="pull-right"> 55 </div>
-                          <div class="clearfix"></div>
-                        </div>
-                        <div class="big-icon">
-                          <canvas id="partly-cloudy-day" width="120" height="120"></canvas>
-                        </div>
-                        <div class="clearfix"></div>
-                      </div>
-                      <div class="tile-footer">
-                        <div class="pull-left">
-                          <canvas id="wind" width="32" height="32"></canvas>
-                          <span class="text-white small-text-description">Windy</span> </div>
-                        <div class="pull-right">
-                          <canvas id="rain" width="32" height="32"></canvas>
-                          <span class="text-white small-text-description">Humidity</span> </div>
-                        <div class="clearfix"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-              <!-- <div class="col-md-4">
-                <div class="row spacing-bottom ">
-                  <div class="col-md-12">
-                    <div class="tiles white added-margin">
-                      <div class="tiles-body">
-                        <div class="controller">
-                          <a href="javascript:;" class="reload"></a>
-                          <a href="javascript:;" class="remove"></a>
-                        </div>
-                        <div class="tiles-title"> SERVER LOAD </div>
-                        <div class="heading text-black "> 250 GB </div>
-                        <div class="progress  progress-small no-radius">
-                          <div class="progress-bar progress-bar-success animate-progress-bar" data-percentage="25%"></div>
-                        </div>
-                        <div class="description"> <span class="mini-description"><span class="text-black">250GB</span> of <span class="text-black">1,024GB</span> used</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="tiles white added-margin">
-                      <div id="chart"> </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12 col-sm-6 spacing-bottom">
-                    <div class="widget">
-                      <div class="widget-title dark">
-                        <div class="pull-left ">
-                          <button class="btn  btn-dark  btn-small" type="button"><i class="fa fa-plus"></i></button>
-                        </div>
-                        Todo list
-                        <div class="controller">
-                          <a href="javascript:;" class="reload"></a>
-                          <a href="javascript:;" class="remove"></a>
-                        </div>
-                      </div>
-                      <div class="widget-body">
-                        <div class="col-md-12">
-                          <input type="text" class="form-control dark m-b-25" id="date">
-                        </div>
-                        <br>
-                        <div class="row-fluid">
-                          <div class="checkbox check-success 	">
-                            <input type="checkbox" value="1" id="chk_todo01" class="todo-list">
-                            <label for="chk_todo01">Send email to David, new signups</label>
-                          </div>
-                        </div>
-                        <div class="row-fluid">
-                          <div class="checkbox check-success 	">
-                            <input type="checkbox" checked="checked" value="1" id="chk_todo02" class="todo-list">
-                            <label for="chk_todo02" class="done">Call Jane!!</label>
-                          </div>
-                        </div>
-                        <div class="row-fluid">
-                          <div class="checkbox check-success 	">
-                            <input type="checkbox" value="1" id="chk_todo03" class="todo-list">
-                            <label for="chk_todo03">Server upgrades ASAP</label>
-                          </div>
-                        </div>
-                        <div class="row-fluid">
-                          <div class="checkbox check-success 	">
-                            <input type="checkbox" value="1" id="chk_todo04" class="todo-list">
-                            <label for="chk_todo04">Hello, new task</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-12 white col-sm-6">
-                    <div class="tiles purple added-margin" style="max-height:345px">
-                      <div class="tiles-body">
-                        <div class="controller">
-                          <a href="javascript:;" class="reload"></a>
-                          <a href="javascript:;" class="remove"></a>
-                        </div>
-                        <h3 class="text-white "> <br>
-                      <br>
-                      <br>
-                      <span class="semi-bold">Steve Jobs</span> Time Capsule` is 
-                      Finally Unearthed on <span class="semi-bold">Skyace News</span> </h3>
-                        <div class="blog-post-controls-wrapper">
-                          <div class="blog-post-control"> <a class="text-white" href="#"><i class="icon-heart"></i> 47k</a> </div>
-                          <div class="blog-post-control"> <a class="text-white" href="#"><i class="icon-comment"></i> 1584</a> </div>
-                        </div>
-                        <br>
-                      </div>
-                    </div>
-                    <div class="tiles white added-margin">
-                      <div class="tiles-body">
-                        <div class="row">
-                          <div class="user-comment-wrapper col-mid-12">
-                            <div class="profile-wrapper"> <img src="assets/img/profiles/d.jpg" alt="" data-src="assets/img/profiles/d.jpg" data-src-retina="assets/img/profiles/d2x.jpg" width="35" height="35"> </div>
-                            <div class="comment">
-                              <div class="user-name"> David <span class="semi-bold">Cooper</span> </div>
-                              <div class="preview-wrapper"> What's the progress on the new project? </div>
-                              <div class="more-details-wrapper">
-                                <div class="more-details"> <i class="icon-time"></i> 12 mins ago </div>
-                                <div class="more-details"> <i class="icon-map-marker"></i> Near Florida </div>
-                              </div>
-                            </div>
-                            <div class="clearfix"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-            <!-- </div> -->
+            
           </div>
           <!-- END PAGE -->
         </div>

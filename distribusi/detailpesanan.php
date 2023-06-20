@@ -523,7 +523,45 @@ include "../import.php"; ?>
             google.maps.event.addListener(map, 'idle', function() {
                 var distance = google.maps.geometry.spherical.computeDistanceBetween(userMarker.getPosition(), goalCircle.getCenter());
                 if (distance <= goalCircle.getRadius()) {
-                    alert('You Have Arrived');
+                    // alert('You Have Arrived');
+                    
+                    var statuscheck = sessionStorage.getItem('detailpengirimanstatuspenjualan');
+
+                    var text;
+
+                    if(statuscheck == "Proses Pengiriman"){
+                        var text = "Menunggu Pembayaran";
+                    }else{
+                        var text = "Pembayaran Diterima";
+                    }
+
+                    $.ajax({
+                        url:"../ajax/distribusi/updatestatuspengiriman.php",
+                        type:"post",
+                        data: { status: text,
+                                key: keydetailpenjualan},
+                        success:function(res){
+                            // console.log(res);
+                            
+                            // alert(res);
+                            if(statuscheck == "Proses Pengiriman"){
+                                alert("Pengiriman Berhasil");
+                            }else{
+                                alert("Pembayaran Diterima");
+                            }
+                            window.location.href = "daftarpesanan.php";
+
+                            // modal = document.getElementById("myModal");
+                            // modal.style.display = "none";
+
+                            // $('#example').DataTable().ajax.reload();
+                            // window.location.replace("profile.php");
+                        },
+                        error:function(err){
+                            alert(err);
+                            alert("err");
+                        }
+                    });
                 }
             });
 

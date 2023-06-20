@@ -124,7 +124,7 @@
     // echo 'New data ID: ' . $pembelianstoknewid;
 
 
-    // Input data calendar into account calendar //
+    // Input data pengiriman calendar into account calendar //
     require_once('../../distribusi/google-calendar-api.php');
     $tempevent = $_POST["parameters"];
     $event = json_decode($tempevent, true);
@@ -159,6 +159,35 @@
         header('Bad Request', true, 400);
         echo json_encode(array( 'error' => 1, 'message' => $e->getMessage() ));
     }
+
+    // Input data pembayaran calendar into account calendar //
+    $paytempevent = $_POST["parametersPembayaran"];
+    $payevent = json_decode($paytempevent, true);
+
+    $paytitle = $payevent['title'];
+    $paylocation = $payevent['location'];
+    $paydescription = $payevent['description'];
+    $paystart_time = $payevent['event_time']['start_time'];
+    $payend_time = $payevent['event_time']['end_time'];
+    $payevent_date = $payevent['event_time']['event_date'];
+    $payall_day = $payevent['all_day'];
+
+    try {
+
+        $paycapi = new GoogleCalendarApi();
+
+        // Get user calendar timezone
+        $payuser_timezone = $paycapi->GetUserCalendarTimezone($_SESSION['access_token']);
+
+        // Create event on primary calendar
+        $payevent_id = $paycapi->CreateCalendarEvent('primary', $paytitle, $payall_day, $payevent['event_time'], $payuser_timezone, $_SESSION['access_token'],  $paylocation,  $paydescription);
+        
+    }
+    catch(Exception $e) {
+        header('Bad Request', true, 400);
+        echo json_encode(array( 'error' => 1, 'message' => $e->getMessage() ));
+    }
+
 
     // Input Data Calendar into Database //
     $propertiescalendarpenjualan = [
