@@ -9,6 +9,7 @@ include "../import.php"; ?>
     // var defaultgrid = 5;
     
     var allbarang;
+    var cekdisable = 0;
 
     function getbarang() {
       $.ajax({
@@ -288,6 +289,7 @@ include "../import.php"; ?>
 
           for (var i = 0; i < allbarang.length; i++){
             if(namegoods == allbarang[i].nama_barang){
+              cekdisable++;
               allnewstock.push({
                   namegoods: namegoods,
                   stockgoods: stockgoods,
@@ -313,6 +315,12 @@ include "../import.php"; ?>
 
           // '<p>Stok '+data[i].stok_barang+'kg</p> '+
           $("#tablegoods").html(str);
+
+          if(cekdisable > 0){
+            document.getElementById("buydategoods").disabled = true;
+            document.getElementById("buylengthgoods").disabled = true;
+          }
+
         // }
     });
 
@@ -367,6 +375,13 @@ include "../import.php"; ?>
         // alert(id);
 
         var split = id.split("_");
+
+        cekdisable--;
+
+        if(cekdisable <= 0){
+          document.getElementById("buydategoods").disabled = false;
+          document.getElementById("buylengthgoods").disabled = false;
+        }
 
         // alert(split);
 

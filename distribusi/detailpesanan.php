@@ -472,6 +472,11 @@ include "../import.php"; ?>
 
 <!-- Script for the map on page -->
 <script>
+    // every 5 minutes
+    // setInterval(initMap, 300000);
+    // every 1 minute
+    setInterval(initMap, 60000);
+    // every second
     // setInterval(initMap, 1000);
     function initMap() {
         // Get user location
@@ -480,6 +485,12 @@ include "../import.php"; ?>
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
+
+            // for testing map radius change
+            // var userLocation = {
+            //     lat: -8.716733,
+            //     lng: 115.168733
+            // };
 
             // Create map centered on user location
             var map = new google.maps.Map(document.getElementById('map'), {
@@ -524,7 +535,7 @@ include "../import.php"; ?>
                 var distance = google.maps.geometry.spherical.computeDistanceBetween(userMarker.getPosition(), goalCircle.getCenter());
                 if (distance <= goalCircle.getRadius()) {
                     // alert('You Have Arrived');
-                    
+
                     var statuscheck = sessionStorage.getItem('detailpengirimanstatuspenjualan');
 
                     var text;

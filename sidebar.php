@@ -6,7 +6,14 @@
             <div class="profile-wrapper sm">
                 <!-- <a class="profile-click" id="profile1" name="profile1"><img src="/PTRutan/LEAPHRIS/kerjaan/assets/img/profiles/avatar.jpg" alt="" data-src="/PTRutan/LEAPHRIS/kerjaan/assets/img/profiles/avatar.jpg"
                     data-src-retina="/PTRutan/LEAPHRIS/kerjaan/assets/img/profiles/avatar2x.jpg" width="69" height="69" /></a> -->
-                <strong style="color: white; font-size: 250%; margin-left: 5%; margin-top: 5%;">Logo</strong>
+                <!-- <strong style="color: white; font-size: 250%; margin-left: 5%; margin-top: 5%;">Logo</strong> -->
+                <a href="/skripsi/apps/index.php">
+                <!-- <img src="/PTRutan/LEAPHRIS/kerjaan/assets/img/logo.png" class="logo" alt="" data-src="/PTRutan/LEAPHRIS/kerjaan/assets/img/logo.png"
+                    data-src-retina="/PTRutan/LEAPHRIS/kerjaan/assets/img/logo2x.png" width="106" height="21" /> -->
+                <img style="margin-top: -100%; margin-left: -10%; height: 180px; width: 180px;" src="/skripsi/apps/assets/img/arthamakmur.png" class="logo" alt="" data-src="/skripsi/apps/assets/img/arthamakmur.png"
+                    data-src-retina="/skripsi/apps/assets/img/arthamakmur.png" width="106" height="106" />
+                    <!-- <strong style="color: white; font-size: 300%; margin-left: 5%; margin-top: 5%;">HRIS</strong> -->
+                <!-- <strong style="color: white; font-size: 250%; margin-left: 5%; margin-top: 5%;">Artha Makmur</strong> -->
             </div>
             <div class="user-info sm usernameSidebar" id="usernameSidebar">
                 <!-- <div class="username">Fred Smith</div>
