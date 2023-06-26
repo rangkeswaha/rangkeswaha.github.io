@@ -34,6 +34,9 @@ include "../import.php"; ?>
         var myArrayString = sessionStorage.getItem('allneworder');
         var allneworder = JSON.parse(myArrayString);
 
+        // alert(sessionStorage.getItem("starttime"));
+        // alert(sessionStorage.getItem("endtime"));
+
         // alert(allneworder[0].namegoods);
         // alert(allneworder[0].stockgoods);
         // alert(allneworder[1].namegoods);
@@ -283,7 +286,11 @@ include "../import.php"; ?>
                     // alert('Event created with ID : ' + response.event_id);
                     alert("Pesanan Berhasil Dibuat");
                     // alert(response);
+                    // alert(response);
+
+                    // after success adding event in google calendar //
                     window.location.href = "pesanan.php";
+
                     // allnewstock.length = 0;
                     // var str = "";
                     // $("#tablegoods").html(str);

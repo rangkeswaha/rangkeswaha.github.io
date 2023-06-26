@@ -73,6 +73,17 @@ include "../import.php"; ?>
     }
 
     $(document).ready(function(){
+
+        // button for cancel
+
+        var statuscheck = sessionStorage.getItem('detailpengirimanstatuspenjualan');
+        if(statuscheck == "Proses Pengiriman"){
+            document.getElementById("cancelPesanan").style.display = "block";
+        }else{
+            document.getElementById("cancelPesanan").style.display = "none";
+        }
+
+
         // get detail data from session storage
         keynota = sessionStorage.getItem('detailpengirimanidnota');
         // alert(keynota);
@@ -238,6 +249,10 @@ include "../import.php"; ?>
                                 <button type="button" id="ubahStatus" name="ubahStatus" style="background-color: #53a551; color: white;" class="btn btn-cons"><i class="icon-ok"></i>
                                 </button>
                             </div>
+                            <div class="pull-right" id="btnCancel">
+                                <button type="button" id="cancelPesanan" name="cancelPesanan" style="margin-left: -25%;" class="btn btn-cons btn-danger"><i class="icon-ok"></i>Batal Pesanan
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -256,6 +271,36 @@ include "../import.php"; ?>
     var savelongitude;
     var savelatitude;
     var savedetail_address;
+
+    $('#cancelPesanan').click(function(){
+
+        var detailpengirimanid = sessionStorage.getItem('detailpengirimankey');
+        var notaid = sessionStorage.getItem('detailpengirimanidnota');
+
+        $.ajax({
+            url:"../ajax/distribusi/cancelpengiriman.php",
+            type:"post",
+            data: { detailpengirimanid: detailpengirimanid,
+                    notaid: notaid},
+            success:function(res){
+                // console.log(res);
+                
+                // alert(res);
+                alert("Pengiriiman Berhasil di Batalkan");
+                window.location.href = "daftarpesanan.php";
+
+                // modal = document.getElementById("myModal");
+                // modal.style.display = "none";
+
+                // $('#example').DataTable().ajax.reload();
+                // window.location.replace("profile.php");
+            },
+            error:function(err){
+                alert(err);
+                alert("err");
+            }
+        });
+    });
 
     $('#ubahStatus').click(function(){
 
@@ -542,6 +587,7 @@ include "../import.php"; ?>
 
                     if(statuscheck == "Proses Pengiriman"){
                         var text = "Menunggu Pembayaran";
+
                     }else{
                         var text = "Pembayaran Diterima";
                     }

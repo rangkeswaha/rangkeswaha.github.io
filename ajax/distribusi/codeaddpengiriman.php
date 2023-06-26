@@ -126,86 +126,265 @@
 
     // Input data pengiriman calendar into account calendar //
     require_once('../../distribusi/google-calendar-api.php');
-    $tempevent = $_POST["parameters"];
-    $event = json_decode($tempevent, true);
-
-    $title = $event['title'];
-    $location = $event['location'];
-    $description = $event['description'];
-    $start_time = $event['event_time']['start_time'];
-    $end_time = $event['event_time']['end_time'];
-    $event_date = $event['event_time']['event_date'];
-    $all_day = $event['all_day'];
-
-    try {
-        // Get event details
-        // $event = $_POST['event_details'];
-        // $tempevent = $_POST["event_details"];
-        // $event = json_decode($tempevent, true);
+    $accessToken = $_SESSION['access_token'];
 
 
-        $capi = new GoogleCalendarApi();
+    // cara baru google calendar start //
+    // add event penjualan in google calendar
+    // event id harus disimpan pada database untuk kebutuhan penghapusan
 
-        // Get user calendar timezone
-        $user_timezone = $capi->GetUserCalendarTimezone($_SESSION['access_token']);
+    try{
 
-        // Create event on primary calendar
-        $event_id = $capi->CreateCalendarEvent('primary', $title, $all_day, $event['event_time'], $user_timezone, $_SESSION['access_token'],  $location,  $description);
-        
-        // echo json_encode([ 'event_id' => $_SESSION['access_token'] ]);
-        // echo json_encode($_SESSION['access_token']);
-    }
-    catch(Exception $e) {
-        header('Bad Request', true, 400);
-        echo json_encode(array( 'error' => 1, 'message' => $e->getMessage() ));
-    }
-
-    // Input data pembayaran calendar into account calendar //
-    $paytempevent = $_POST["parametersPembayaran"];
-    $payevent = json_decode($paytempevent, true);
-
-    $paytitle = $payevent['title'];
-    $paylocation = $payevent['location'];
-    $paydescription = $payevent['description'];
-    $paystart_time = $payevent['event_time']['start_time'];
-    $payend_time = $payevent['event_time']['end_time'];
-    $payevent_date = $payevent['event_time']['event_date'];
-    $payall_day = $payevent['all_day'];
-
-    try {
-
-        $paycapi = new GoogleCalendarApi();
-
-        // Get user calendar timezone
-        $payuser_timezone = $paycapi->GetUserCalendarTimezone($_SESSION['access_token']);
-
-        // Create event on primary calendar
-        $payevent_id = $paycapi->CreateCalendarEvent('primary', $paytitle, $payall_day, $payevent['event_time'], $payuser_timezone, $_SESSION['access_token'],  $paylocation,  $paydescription);
-        
-    }
-    catch(Exception $e) {
-        header('Bad Request', true, 400);
-        echo json_encode(array( 'error' => 1, 'message' => $e->getMessage() ));
-    }
-
-
-    // Input Data Calendar into Database //
-    $propertiescalendarpenjualan = [
-        'id_Detail_penjualan' => $newiddetailpenjualan,
-        'title' => $title,
-        'description' => $description,
-        'location' => $location,
-        'date' => $event_date,
-        'time_from' => $start_time,
-        'time_to' => $end_time,
-        'google_calendar_id' => $_SESSION['access_token'],
-    ];
+        $headers = [
+            'Content-Type: application/json',
+            "Authorization: Bearer {$accessToken}",
+        ];
     
-    $ref_table6 = "Calendar_penjualan";
-    $postRef_result6 = $database->getReference($ref_table6)->push($propertiescalendarpenjualan);
+        $tempevent = $_POST["parameters"];
+        $eventfetch = json_decode($tempevent, true);
+    
+        $title = $eventfetch['title'];
+        $location = $eventfetch['location'];
+        $description = $eventfetch['description'];
+        $start_time = $eventfetch['event_time']['start_time'];
+        $end_time = $eventfetch['event_time']['end_time'];
+        $event_date = $eventfetch['event_time']['event_date'];
+        $all_day = $eventfetch['all_day'];
+    
+        $event = [
+            'summary' => $title,
+            'start' => [
+                "dateTime" => $start_time,
+                'timeZone' => 'Asia/Jakarta',
+            ],
+            'end' => [
+                "dateTime" => $end_time,
+                'timeZone' => 'Asia/Jakarta',
+            ],
+            'location' => $location,
+            'description' => $description,
+        ];
+    
+        $eventJson = json_encode($event);
+    
+        $url = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';
+    
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $eventJson);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+    
+        if ($response) {
+            $responseData = json_decode($response, true);
+            $eventId = $responseData['id'];
+            echo "Event added successfully. Event ID: " . $eventId;
+    
+            // Input Data Calendar into Database Calendar_penjualan //
+            $propertiescalendarpenjualan = [
+                'id_Detail_penjualan' => $newiddetailpenjualan,
+                'title' => $title,
+                'description' => $description,
+                'location' => $location,
+                'date' => $event_date,
+                'time_from' => $start_time,
+                'time_to' => $end_time,
+                // 'google_calendar_id' => $_SESSION['access_token'],
+                'google_calendar_id' => $eventId,
+            ];
+            
+            $ref_table6 = "Calendar_penjualan";
+            $postRef_result6 = $database->getReference($ref_table6)->push($propertiescalendarpenjualan);
+    
+            $newidcalendarpenjualan = $postRef_result6->getKey();
+            // // echo 'New data ID: ' . $pembelianstoknewid;
+    
+        }
 
-    $newidcalendarpenjualan = $postRef_result6->getKey();
-    // echo 'New data ID: ' . $pembelianstoknewid;
+    }
+    catch(Exception $e) {
+        header('Bad Request', true, 400);
+        echo json_encode(array( 'error' => 1, 'message' => $e->getMessage() ));
+    }
+
+
+
+    // add event pembayaran in google calendar
+    // event id harus disimpan pada database untuk kebutuhan penghapusan
+
+    try{
+
+        $headerspay = [
+            'Content-Type: application/json',
+            "Authorization: Bearer {$accessToken}",
+        ];
+    
+        $tempeventpay = $_POST["parametersPembayaran"];
+        $eventfetchpay = json_decode($tempeventpay, true);
+    
+        $titlepay = $eventfetchpay['title'];
+        $locationpay = $eventfetchpay['location'];
+        $descriptionpay = $eventfetchpay['description'];
+        $start_timepay = $eventfetchpay['event_time']['start_time'];
+        $end_timepay = $eventfetchpay['event_time']['end_time'];
+        $event_datepay = $eventfetchpay['event_time']['event_date'];
+        $all_daypay = $eventfetchpay['all_day'];
+    
+        $eventpay = [
+            'summary' => $titlepay,
+            'start' => [
+                "dateTime" => $start_timepay,
+                'timeZone' => 'Asia/Jakarta',
+            ],
+            'end' => [
+                "dateTime" => $end_timepay,
+                'timeZone' => 'Asia/Jakarta',
+            ],
+            'location' => $locationpay,
+            'description' => $descriptionpay,
+        ];
+    
+        $eventJsonpay = json_encode($eventpay);
+    
+        $urlpay = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';
+    
+        $chpay = curl_init($urlpay);
+        curl_setopt($chpay, CURLOPT_POST, true);
+        curl_setopt($chpay, CURLOPT_HTTPHEADER, $headerspay);
+        curl_setopt($chpay, CURLOPT_POSTFIELDS, $eventJsonpay);
+        curl_setopt($chpay, CURLOPT_RETURNTRANSFER, true);
+        $responsepay = curl_exec($chpay);
+        curl_close($chpay);
+    
+        if ($responsepay) {
+            $responseDatapay = json_decode($responsepay, true);
+            $eventIdpay = $responseDatapay['id'];
+            // echo "Event added successfully. Event ID: " . $eventId;
+    
+            // Input Data Calendar into Database Calendar_penjualan //
+            $propertiescalendarpembayaran = [
+                'id_Detail_penjualan' => $newiddetailpenjualan,
+                'title' => $titlepay,
+                'description' => $descriptionpay,
+                'location' => $locationpay,
+                'date' => $event_datepay,
+                'time_from' => $start_timepay,
+                'time_to' => $end_timepay,
+                // 'google_calendar_id' => $_SESSION['access_token'],
+                'google_calendar_id' => $eventIdpay,
+            ];
+            
+            $ref_tablepay = "Calendar_pembayaran";
+            $postRef_resultpay = $database->getReference($ref_tablepay)->push($propertiescalendarpembayaran);
+    
+            $newidcalendarpembayaran = $postRef_resultpay->getKey();
+            // // echo 'New data ID: ' . $pembelianstoknewid;
+    
+        }
+
+    }
+    catch(Exception $e) {
+        header('Bad Request', true, 400);
+        echo json_encode(array( 'error' => 1, 'message' => $e->getMessage() ));
+    }
+
+
+
+
+
+    // cara baru google calendar end //
+
+
+
+
+    // cara awal google calendar start //
+    // $tempevent = $_POST["parameters"];
+    // $event = json_decode($tempevent, true);
+
+    // $title = $event['title'];
+    // $location = $event['location'];
+    // $description = $event['description'];
+    // $start_time = $event['event_time']['start_time'];
+    // $end_time = $event['event_time']['end_time'];
+    // $event_date = $event['event_time']['event_date'];
+    // $all_day = $event['all_day'];
+
+    // $event_id;
+
+    // try {
+    //     // Get event details
+    //     // $event = $_POST['event_details'];
+    //     // $tempevent = $_POST["event_details"];
+    //     // $event = json_decode($tempevent, true);
+
+
+    //     $capi = new GoogleCalendarApi();
+
+    //     // Get user calendar timezone
+    //     $user_timezone = $capi->GetUserCalendarTimezone($_SESSION['access_token']);
+
+    //     // Create event on primary calendar
+    //     $event_id = $capi->CreateCalendarEvent('primary', $title, $all_day, $event['event_time'], $user_timezone, $_SESSION['access_token'],  $location,  $description);
+        
+    //     // echo json_encode([ 'event_id' => $_SESSION['access_token'] ]);
+    //     // echo json_encode($_SESSION['access_token']);
+    // }
+    // catch(Exception $e) {
+    //     header('Bad Request', true, 400);
+    //     echo json_encode(array( 'error' => 1, 'message' => $e->getMessage() ));
+    // }
+
+    // // Input data pembayaran calendar into account calendar //
+    // $paytempevent = $_POST["parametersPembayaran"];
+    // $payevent = json_decode($paytempevent, true);
+
+    // $paytitle = $payevent['title'];
+    // $paylocation = $payevent['location'];
+    // $paydescription = $payevent['description'];
+    // $paystart_time = $payevent['event_time']['start_time'];
+    // $payend_time = $payevent['event_time']['end_time'];
+    // $payevent_date = $payevent['event_time']['event_date'];
+    // $payall_day = $payevent['all_day'];
+
+    // try {
+
+    //     $paycapi = new GoogleCalendarApi();
+
+    //     // Get user calendar timezone
+    //     $payuser_timezone = $paycapi->GetUserCalendarTimezone($_SESSION['access_token']);
+
+    //     // Create event on primary calendar
+    //     $payevent_id = $paycapi->CreateCalendarEvent('primary', $paytitle, $payall_day, $payevent['event_time'], $payuser_timezone, $_SESSION['access_token'],  $paylocation,  $paydescription);
+        
+    // }
+    // catch(Exception $e) {
+    //     header('Bad Request', true, 400);
+    //     echo json_encode(array( 'error' => 1, 'message' => $e->getMessage() ));
+    // }
+
+
+    // // Input Data Calendar into Database Calendar_penjualan //
+    // $propertiescalendarpenjualan = [
+    //     'id_Detail_penjualan' => $newiddetailpenjualan,
+    //     'title' => $title,
+    //     'description' => $description,
+    //     'location' => $location,
+    //     'date' => $event_date,
+    //     'time_from' => $start_time,
+    //     'time_to' => $end_time,
+    //     // 'google_calendar_id' => $_SESSION['access_token'],
+    //     'google_calendar_id' => $event_id,
+    // ];
+    
+    // $ref_table6 = "Calendar_penjualan";
+    // $postRef_result6 = $database->getReference($ref_table6)->push($propertiescalendarpenjualan);
+
+    // $newidcalendarpenjualan = $postRef_result6->getKey();
+    // // echo 'New data ID: ' . $pembelianstoknewid;
+
+    // cara awal google calendar end //
 
 
 

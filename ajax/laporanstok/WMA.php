@@ -196,8 +196,10 @@ include('../../db.php');
     $MAPE = $totalape / 3;
 
     $tempramalan = ($ramalan0 * $MAPE) / 100;
-    $ramalanakhir = $ramalan0 - $tempramalan;
+    // $ramalanakhir = $ramalan0 - $tempramalan;
+
+    // $ramalanakhir = 
     
     
-    echo json_encode($ramalanakhir);
+    echo json_encode($tempramalan);
 ?>
