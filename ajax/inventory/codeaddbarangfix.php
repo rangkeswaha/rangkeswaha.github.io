@@ -8,8 +8,10 @@
 
         // echo 'didalem first';
         $namegoods = $_POST["namegoods"];
-        $pricegoods = $_POST["pricegoods"];
-        $stockgoods = $_POST["stockgoods"];
+        $pricegoodstemp = $_POST["pricegoods"];
+        $pricegoods = str_replace(',', '', $pricegoodstemp);
+        $stockgoodstemp = $_POST["stockgoods"];
+        $stockgoods = str_replace(',', '', $stockgoodstemp);
         $kategoribarang = $_POST["selectKategori"];
         $splitkategori = explode("_", $kategoribarang);
         $kategori = $splitkategori[0];

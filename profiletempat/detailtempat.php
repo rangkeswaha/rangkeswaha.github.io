@@ -50,8 +50,11 @@ include "../import.php"; ?>
                 // alert("Data Tempat Telah Diganti");
                 // alert(datahotel);
                 
-                document.getElementById("tPesanan").innerHTML = datahotel[0];
-                document.getElementById("tPembayaran").innerHTML = "Rp " + datahotel[1];
+                // document.getElementById("tPesanan").innerHTML = datahotel[0];
+                // document.getElementById("tPembayaran").innerHTML = "Rp " + datahotel[1];
+                document.getElementById("tPesanan").innerHTML = parseFloat(datahotel[0]).toLocaleString('en');
+                document.getElementById("tPembayaran").innerHTML = "Rp " + parseFloat(datahotel[1]).toLocaleString('en');
+
 
                 // modal = document.getElementById("myModal");
                 // modal.style.display = "none";
@@ -80,7 +83,8 @@ include "../import.php"; ?>
                 // alert("Data Tempat Telah Diganti");
                 // alert(datahotel);
                 
-                document.getElementById("tBeratPesanan").innerHTML = datahotel + " kg";
+                // document.getElementById("tBeratPesanan").innerHTML = datahotel + " kg";
+                document.getElementById("tBeratPesanan").innerHTML = parseFloat(datahotel).toLocaleString('en') + " kg";
 
                 // modal = document.getElementById("myModal");
                 // modal.style.display = "none";
@@ -119,9 +123,27 @@ include "../import.php"; ?>
             "columns": [
                 // { "data": "nama_pembeli" },
                 { "data": "status_penjualan" },
-                { "data": "jumlah_barang" },
-                { "data": "total_berat" },
-                { "data": "total_harga" },
+                // { "data": "jumlah_barang" },
+                {
+                    "data": "jumlah_barang",
+                    "render": function (data, type, row) {
+                        return parseFloat(data).toLocaleString('en');
+                    }
+                },
+                // { "data": "total_berat" },
+                {
+                    "data": "total_berat",
+                    "render": function (data, type, row) {
+                        return parseFloat(data).toLocaleString('en');
+                    }
+                },
+                // { "data": "total_harga" },
+                {
+                    "data": "total_harga",
+                    "render": function (data, type, row) {
+                        return parseFloat(data).toLocaleString('en');
+                    }
+                },
                 { "data": "tanggal_bayar" },
                 { "data": "tanggaldijual" },
             ]
@@ -259,7 +281,7 @@ include "../import.php"; ?>
                                     <tr>
                                         <th>Status</th>
                                         <th>Total Barang</th>
-                                        <th>Total Berat</th>
+                                        <th>Total Berat (kg)</th>
                                         <th>Total Harga</th>
                                         <th>Tanggal Pengiriman</th>
                                         <th>Tanggal Pembayaran</th>

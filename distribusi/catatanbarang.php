@@ -289,7 +289,7 @@ include "../import.php"; ?>
                     // alert(response);
 
                     // after success adding event in google calendar //
-                    window.location.href = "pesanan.php";
+                    // window.location.href = "pesanan.php";
 
                     // allnewstock.length = 0;
                     // var str = "";

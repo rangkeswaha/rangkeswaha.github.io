@@ -52,7 +52,13 @@ include "../import.php"; ?>
                 },
                 // { "data": "nama_pembeli" },
                 { "data": "jumlah_barang" },
-                { "data": "total_harga" },
+                // { "data": "total_harga" },
+                {
+                    "data": "total_harga",
+                    "render": function (data, type, row) {
+                        return parseFloat(data).toLocaleString('en');
+                    }
+                },
                 { "data": "tanggal_pengiriman" },
                 { "data": "tanggal_pembayaran" },
                 { "data": "status_penjualan" },

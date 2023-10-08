@@ -214,8 +214,11 @@ include "../import.php"; ?>
                                 </div>
                                 <div class="col-md-6">
                                     <label>Jumlah Stok (kg)</label>
-                                    <input name="stockgoods" id="stockgoods" type="number"
+                                    <input name="stockgoods" id="stockgoods" type="text"
                                         class="form-control" placeholder="10" value="">
+                                    <!-- <input name="stockgoods" id="stockgoods" type="number"
+                                        class="form-control" placeholder="10" value=""> -->
+                                        <!-- <input type="text" id="numberInput" /> -->
                                 </div>
                             </div> 
                         </div>
@@ -339,6 +342,27 @@ include "../import.php"; ?>
     var allnewstock = [];
     var totalHarga = 0;
 
+    // put separator in jumlah stok
+    var numberInput = document.getElementById('stockgoods');
+
+    numberInput.addEventListener('keydown', function (e) {
+      // Allow only numeric characters, backspace, and delete key
+      if (!/[\d\b]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && !/^Arrow/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+
+    numberInput.addEventListener('input', function (e) {
+      // Remove any non-digit characters
+      var value = e.target.value.replace(/\D/g, '');
+
+      // Format the number with commas as thousands separators
+      var formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+      // Set the input value to the formatted number
+      e.target.value = formatted;
+    });
+
     // Selected time should not be less than current time
     function AdjustMinTime(ct) {
       var dtob = new Date(),
@@ -361,107 +385,113 @@ include "../import.php"; ?>
     $("#paydategoods").datetimepicker({ format: 'Y-m-d H:i', minDate: 0, minTime: 0, step: 5, onShow: AdjustMinTime, onSelectDate: AdjustMinTime });
 
     $('#addbutton').click(function(){
-          var namegoods = $("#namegoods").val();
-          var stockgoods = $("#stockgoods").val();
-          var paydategoods = $("#paydategoods").val();
-          var saledategoods = $("#saledategoods").val();
+        // convert back the number format into original
+        var input = document.getElementById('stockgoods');
+        var stockgoods = input.value.replace(/,/g, '');
+
+        // var stockgoods = $("#stockgoods").val();
+        // alert(stockgoods);
+
+        var namegoods = $("#namegoods").val();
+        var paydategoods = $("#paydategoods").val();
+        var saledategoods = $("#saledategoods").val();
+
+      
+        // if(namegoods == "" && stockgoods == "" && buylengthgoods == "" && buydategoods == ""){
+        //   alert("Tolong Lengkapi Data Terlebih Dahulu")
+        // }else{
+
+        // alert(allbarang[0].nama_barang);
+        // alert("masuk");
+
+        // Date Application Pengiriman //
+        var date = $("#saledategoods").val().replace(' ', 'T') + ':00';
+        // alert(date);
+
+        var dateslice = date.slice(0, 10);
+        var timeslice = date.slice(11);
+        // alert(dateslice);
+        // alert(timeslice);
+
+        var timetemp = new Date(`1970-01-01T${timeslice}`);
+        timetemp.setMinutes(timetemp.getMinutes() + 30);
+        var newTimeString = timetemp.toTimeString().slice(0, 8);
+        // alert(newTimeString);
+
+        var dateTimeString = `${dateslice}T${newTimeString}`;
+        // alert(dateTimeString);
+
+        sessionStorage.setItem("starttime", date);
+        sessionStorage.setItem("endtime", dateTimeString);
+
+        // cek date type data //
+        // if (typeof date === typeof dateTimeString) {
+        //   alert("the same");
+        // }
+
+        // Date Application Pembayaran //
+        var paydate = $("#paydategoods").val().replace(' ', 'T') + ':00';
+        // alert(paydate);
+
+        var paydateslice = paydate.slice(0, 10);
+        var paytimeslice = paydate.slice(11);
+        // alert(dateslice);
+        // alert(timeslice);
+
+        var paytimetemp = new Date(`1970-01-01T${paytimeslice}`);
+        paytimetemp.setMinutes(paytimetemp.getMinutes() + 30);
+        var paynewTimeString = paytimetemp.toTimeString().slice(0, 8);
+        // alert(newTimeString);
+
+        var paydateTimeString = `${paydateslice}T${paynewTimeString}`;
+        // alert(dateTimeString);
+
+        sessionStorage.setItem("paystarttime", paydate);
+        sessionStorage.setItem("payendtime", paydateTimeString);
 
         
-          // if(namegoods == "" && stockgoods == "" && buylengthgoods == "" && buydategoods == ""){
-          //   alert("Tolong Lengkapi Data Terlebih Dahulu")
-          // }else{
 
-          // alert(allbarang[0].nama_barang);
-          // alert("masuk");
-
-          // Date Application Pengiriman //
-          var date = $("#saledategoods").val().replace(' ', 'T') + ':00';
-          // alert(date);
-
-          var dateslice = date.slice(0, 10);
-          var timeslice = date.slice(11);
-          // alert(dateslice);
-          // alert(timeslice);
-
-          var timetemp = new Date(`1970-01-01T${timeslice}`);
-          timetemp.setMinutes(timetemp.getMinutes() + 30);
-          var newTimeString = timetemp.toTimeString().slice(0, 8);
-          // alert(newTimeString);
-
-          var dateTimeString = `${dateslice}T${newTimeString}`;
-          // alert(dateTimeString);
-
-          sessionStorage.setItem("starttime", date);
-          sessionStorage.setItem("endtime", dateTimeString);
-
-          // cek date type data //
-          // if (typeof date === typeof dateTimeString) {
-          //   alert("the same");
-          // }
-
-          // Date Application Pembayaran //
-          var paydate = $("#paydategoods").val().replace(' ', 'T') + ':00';
-          // alert(paydate);
-
-          var paydateslice = paydate.slice(0, 10);
-          var paytimeslice = paydate.slice(11);
-          // alert(dateslice);
-          // alert(timeslice);
-
-          var paytimetemp = new Date(`1970-01-01T${paytimeslice}`);
-          paytimetemp.setMinutes(paytimetemp.getMinutes() + 30);
-          var paynewTimeString = paytimetemp.toTimeString().slice(0, 8);
-          // alert(newTimeString);
-
-          var paydateTimeString = `${paydateslice}T${paynewTimeString}`;
-          // alert(dateTimeString);
-
-          sessionStorage.setItem("paystarttime", paydate);
-          sessionStorage.setItem("payendtime", paydateTimeString);
-
-          
-
-          for (var i = 0; i < allbarang.length; i++){
-            if(namegoods == allbarang[i].nama_barang){
-              cekdisable++;
-              allnewstock.push({
-                  namegoods: namegoods,
-                  stockgoods: stockgoods,
-                  paydategoods: paydategoods,
-                  saledategoods: dateTimeString,
-                  firststockgoods: allbarang[i].stok_barang,
-                  key: allbarang[i].key,
-                  pricegoods: allbarang[i].harga_barang,
-              });
-            }
+        for (var i = 0; i < allbarang.length; i++){
+          if(namegoods == allbarang[i].nama_barang){
+            cekdisable++;
+            allnewstock.push({
+                namegoods: namegoods,
+                stockgoods: stockgoods,
+                paydategoods: paydategoods,
+                saledategoods: dateTimeString,
+                firststockgoods: allbarang[i].stok_barang,
+                key: allbarang[i].key,
+                pricegoods: allbarang[i].harga_barang,
+            });
           }
+        }
 
-          // alert(allnewstock.length);
+        // alert(allnewstock.length);
 
-          document.getElementById("namegoods").value = "";
+        document.getElementById("namegoods").value = "";
 
-          var str = "";
+        var str = "";
 
-          for (var i = 0; i < allnewstock.length; i++){
-            str += "<tr>"+
-            "<td>"+allnewstock[i].namegoods+"</td>"+
-            "<td>"+allnewstock[i].stockgoods+"</td>"+
-            "<td>"+allnewstock[i].saledategoods+"</td>"+
-            "<td>"+allnewstock[i].paydategoods+"</td>"+
-            "<td> <buttton id='del_"+i+"' class='btn btn-danger delStock'>Delete</button></td>"+
-            "</tr>";
-          }
+        for (var i = 0; i < allnewstock.length; i++){
+          str += "<tr>"+
+          "<td>"+allnewstock[i].namegoods+"</td>"+
+          "<td>"+allnewstock[i].stockgoods+"</td>"+
+          "<td>"+allnewstock[i].saledategoods+"</td>"+
+          "<td>"+allnewstock[i].paydategoods+"</td>"+
+          "<td> <buttton id='del_"+i+"' class='btn btn-danger delStock'>Delete</button></td>"+
+          "</tr>";
+        }
 
-          // '<p>Stok '+data[i].stok_barang+'kg</p> '+
-          $("#tablegoods").html(str);
+        // '<p>Stok '+data[i].stok_barang+'kg</p> '+
+        $("#tablegoods").html(str);
 
-          if(cekdisable > 0){
-            document.getElementById("paydategoods").disabled = true;
-            document.getElementById("saledategoods").disabled = true;
-          }
+        if(cekdisable > 0){
+          document.getElementById("paydategoods").disabled = true;
+          document.getElementById("saledategoods").disabled = true;
+        }
 
-          // alert(allnewstock[0].pricegoods);
-        // }
+        // alert(allnewstock[0].pricegoods);
+      // }
     });
 
     // $(document).on("click",".savebutton",function(){

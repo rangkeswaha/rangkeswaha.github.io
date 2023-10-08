@@ -76,6 +76,7 @@
                     <!-- <li id="sidebar_history_master"> <a href="/PTRutan/LEAPHRIS/kerjaan/history/historymaster.php">Distribusi</a></li>
                     <li id="sidebar_history_data_pegawai"> <a href="/PTRutan/LEAPHRIS/kerjaan/history/historydatapegawai.php">Laba Rugi</a></li>
                     <li id="sidebar_history_data_pegawai"> <a href="/PTRutan/LEAPHRIS/kerjaan/history/historydatapegawai.php">Hotel</a></li> -->
+                    <li id="sidebar_laporan_laba_rugi"> <a href="/skripsi/apps/labarugi/labarugi.php">Laba Rugi</a></li>
                     <li id="sidebar_laporan_penghitungan_stok"> <a href="/skripsi/apps/laporan_stok/laporanstok.php">Penghitungan Stok</a></li>
                     <li id="sidebar_laporan_profile_tempat"> <a href="/skripsi/apps/profiletempat/listtempat.php">Profile Customer</a></li>
                 </ul>

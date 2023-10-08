@@ -211,14 +211,19 @@ include "../import.php"; ?>
                         </div>
                         <div class="form-group">
                             <div class="row form-row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label>Lama Pembelian</label>
                                     <input name="buylengthgoods" id="buylengthgoods" type="number"
                                         class="form-control" placeholder="Berapa hari" value="">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label>Jumlah Stok (kg)</label>
                                     <input name="stockgoods" id="stockgoods" type="number"
+                                        class="form-control" placeholder="10" value="">
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Harga Total Barang</label>
+                                    <input name="pricegoods" id="pricegoods" type="number"
                                         class="form-control" placeholder="10" value="">
                                 </div>
                             </div>
@@ -239,6 +244,7 @@ include "../import.php"; ?>
                                     <th>Stok Barang</th>
                                     <th>Lama Pembelian</th>
                                     <th>Tanggal Pembelian</th>
+                                    <th>Harga Total</th>
                                     <th>Delete</th>
                                 </tr>
                             </thead>
@@ -280,6 +286,7 @@ include "../import.php"; ?>
           var stockgoods = $("#stockgoods").val();
           var buylengthgoods = $("#buylengthgoods").val();
           var buydategoods = $("#buydategoods").val();
+          var pricegoods = $("#pricegoods").val();
         
         // if(namegoods == "" && stockgoods == "" && buylengthgoods == "" && buydategoods == ""){
         //   alert("Tolong Lengkapi Data Terlebih Dahulu")
@@ -297,6 +304,7 @@ include "../import.php"; ?>
                   buydategoods: buydategoods,
                   firststockgoods: allbarang[i].stok_barang,
                   key: allbarang[i].key,
+                  pricegoods: pricegoods,
               });
             }
           }
@@ -309,6 +317,7 @@ include "../import.php"; ?>
             "<td>"+allnewstock[i].stockgoods+"</td>"+
             "<td>"+allnewstock[i].buylengthgoods+"</td>"+
             "<td>"+allnewstock[i].buydategoods+"</td>"+
+            "<td>"+allnewstock[i].pricegoods+"</td>"+
             "<td> <buttton id='del_"+i+"' class='btn btn-danger delStock'>Delete</button></td>"+
             "</tr>";
           }
@@ -354,6 +363,7 @@ include "../import.php"; ?>
           data: { allnewdata:allnewdata },
           success: function(response) {
             // console.log(response);
+            // alert(response);
             alert("Data Berhasil Disimpan");
             allnewstock.length = 0;
             var str = "";
@@ -398,6 +408,7 @@ include "../import.php"; ?>
           "<td>"+allnewstock[i].stockgoods+"</td>"+
           "<td>"+allnewstock[i].buylengthgoods+"</td>"+
           "<td>"+allnewstock[i].buydategoods+"</td>"+
+          "<td>"+allnewstock[i].pricegoods+"</td>"+
           "<td> <buttton id='del_"+i+"' class='btn btn-danger delStock'>Delete</button></td>"+
           "</tr>";
         }

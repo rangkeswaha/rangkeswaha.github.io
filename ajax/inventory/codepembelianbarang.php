@@ -50,6 +50,7 @@
                 'lama_pembelian' => $data[$i]['buylengthgoods'],
                 'tanggal_pembelian' => $data[$i]['buydategoods'],
                 'jumlah_barang' => $data[$i]['stockgoods'],
+                'total_harga' => $data[$i]['pricegoods'],
             ];
     
             $ref_table = "Pembelian_stok";

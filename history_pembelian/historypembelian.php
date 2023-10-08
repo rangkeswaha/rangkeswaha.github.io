@@ -51,7 +51,13 @@ include "../import.php"; ?>
                     }
                 },
                 // { "data": "nama_pembeli" },
-                { "data": "stok_dibeli" },
+                // { "data": "stok_dibeli" },
+                {
+                    "data": "stok_dibeli",
+                    "render": function (data, type, row) {
+                        return parseFloat(data).toLocaleString('en') + " kg";
+                    }
+                },
                 { "data": "lama_pembelian"},
                 { "data": "tanggal_pembelian"},
                 // { "render": function (data, type, row, meta) { // Tampilkan kolom aksi

@@ -39,6 +39,10 @@ include "../import.php"; ?>
     var keynota;
     var keydetailpenjualan;
 
+    function setInputValue(id, value) {
+        document.getElementById(id).value = parseFloat(value).toLocaleString('en');
+    }
+
     function getnota() {
         $.ajax({
             type: 'POST',
@@ -101,7 +105,10 @@ include "../import.php"; ?>
         document.getElementById('datePengiriman').value = sessionStorage.getItem('detailpengirimantanggalpengiriman');
         document.getElementById('datePembayaran').value = sessionStorage.getItem('detailpengirimantanggalpembayaran');
         document.getElementById('jumlahBarang').value = sessionStorage.getItem('detailpengirimanjumlahbarang');
-        document.getElementById('totalHarga').value = sessionStorage.getItem('detailpengirimantotalharga');
+
+        // put harga into text
+        // document.getElementById('totalHarga').value = sessionStorage.getItem('detailpengirimantotalharga');
+        setInputValue('totalHarga', sessionStorage.getItem('detailpengirimantotalharga'));
 
         getnota();
 

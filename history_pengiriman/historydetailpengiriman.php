@@ -90,7 +90,7 @@ include "../import.php"; ?>
         document.getElementById('datePengiriman').value = sessionStorage.getItem('historydetailpengirimantanggalpengiriman');
         document.getElementById('datePembayaran').value = sessionStorage.getItem('historydetailpengirimantanggalpembayaran');
         document.getElementById('jumlahBarang').value = sessionStorage.getItem('historydetailpengirimanjumlahbarang');
-        document.getElementById('totalHarga').value = sessionStorage.getItem('historydetailpengirimantotalharga');
+        document.getElementById('totalHarga').value = parseFloat(sessionStorage.getItem('historydetailpengirimantotalharga')).toLocaleString('en');
 
         getnota();
 

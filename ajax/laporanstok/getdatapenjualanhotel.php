@@ -26,7 +26,7 @@
             $arr[$co] = array(
                 'key' => $key,
                 'status_penjualan' => $item['status_penjualan'],
-                'jumlah_barang' => $item['status_penjualan'],
+                'jumlah_barang' => $item['jumlah_barang'],
                 'total_berat' => $totalberat,
                 'total_harga' => $item['total_harga'],
                 'tanggal_bayar' => $tglbayar,

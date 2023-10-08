@@ -437,60 +437,60 @@ include('../../db.php');
 
 
 
-    $detailpengirimanid = "-NYu4rc3SxquJkaDXNx2";
+    // $detailpengirimanid = "-NYu4rc3SxquJkaDXNx2";
 
-    // get google pembayaran id
-    $calendarpembayaranRef = $database->getReference('Calendar_pembayaran')->getSnapshot();
+    // // get google pembayaran id
+    // $calendarpembayaranRef = $database->getReference('Calendar_pembayaran')->getSnapshot();
 
-    $googlepembayaranid = null;
-    $keypembayaran = null;
+    // $googlepembayaranid = null;
+    // $keypembayaran = null;
 
-    foreach ($calendarpembayaranRef->getValue() as $key => $value) {
-        if ($value['id_Detail_penjualan'] == $detailpengirimanid) {
-            $keypembayaran = $key;
-            $googlepembayaranid = $value['google_calendar_id'];
-            break;
-        }
-    }
+    // foreach ($calendarpembayaranRef->getValue() as $key => $value) {
+    //     if ($value['id_Detail_penjualan'] == $detailpengirimanid) {
+    //         $keypembayaran = $key;
+    //         $googlepembayaranid = $value['google_calendar_id'];
+    //         break;
+    //     }
+    // }
 
-    // // get google penjualan id
-    $calendarpenjualanRef = $database->getReference('Calendar_penjualan')->getSnapshot();
+    // // // get google penjualan id
+    // $calendarpenjualanRef = $database->getReference('Calendar_penjualan')->getSnapshot();
 
-    $googlepenjualanid = null;
-    $keypenjualan = null;
+    // $googlepenjualanid = null;
+    // $keypenjualan = null;
 
-    foreach ($calendarpenjualanRef->getValue() as $key => $value) {
-        if ($value['id_Detail_penjualan'] == $detailpengirimanid) {
-            $keypenjualan = $key;
-            $googlepenjualanid = $value['google_calendar_id'];
-            break;
-        }
-    }
+    // foreach ($calendarpenjualanRef->getValue() as $key => $value) {
+    //     if ($value['id_Detail_penjualan'] == $detailpengirimanid) {
+    //         $keypenjualan = $key;
+    //         $googlepenjualanid = $value['google_calendar_id'];
+    //         break;
+    //     }
+    // }
 
-    echo $googlepembayaranid;
-    echo "\n";
-    echo $keypembayaran;
-    echo "\n\n\n\n";
-    echo $googlepenjualanid;
-    echo "\n";
-    echo $keypenjualan;
-    echo "\n\n\n\n";
-    echo "\n\n\n\n";
-    echo "\n\n\n\n";
-    echo "\n\n\n\n";
+    // echo $googlepembayaranid;
+    // echo "\n";
+    // echo $keypembayaran;
+    // echo "\n\n\n\n";
+    // echo $googlepenjualanid;
+    // echo "\n";
+    // echo $keypenjualan;
+    // echo "\n\n\n\n";
+    // echo "\n\n\n\n";
+    // echo "\n\n\n\n";
+    // echo "\n\n\n\n";
 
-    $HpenjualanRef = $database->getReference('Hpenjualan')->getSnapshot();
+    // $HpenjualanRef = $database->getReference('Hpenjualan')->getSnapshot();
 
-    $keyHpenjualan = null;
+    // $keyHpenjualan = null;
 
-    foreach ($HpenjualanRef->getValue() as $key => $value) {
-        if ($value['id_Detail_penjualan'] === $detailpengirimanid) {
-            $keyHpenjualan = $key;
-            break;
-        }
-    }
+    // foreach ($HpenjualanRef->getValue() as $key => $value) {
+    //     if ($value['id_Detail_penjualan'] === $detailpengirimanid) {
+    //         $keyHpenjualan = $key;
+    //         break;
+    //     }
+    // }
 
-    echo $keyHpenjualan;
+    // echo $keyHpenjualan;
     
 
     // coba delete
@@ -517,6 +517,13 @@ include('../../db.php');
     // echo $fetchdatanota["id_Pengingat"];
     // echo "\n\n\n\n";
     // echo $fetchdatanota["id_Catatan"];
+
+
+
+    $dates = array("2023-06-30T04:00:00", "2023-06-29T04:00:00", "2023-06-10T04:00:00");
+    $latestDate = max($dates);
+
+    echo $latestDate;
     
 ?>
 

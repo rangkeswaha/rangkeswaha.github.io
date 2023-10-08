@@ -115,8 +115,10 @@ include "../import.php"; ?>
                                 </div>
                                 <div class="col-md-4">
                                     <label>Harga Barang per Kilo</label>
-                                    <input name="pricegoods" style="text-align: center;" id="pricegoods" type="number"
-                                        class="form-control currency" min="0" placeholder="100000" value="0">
+                                    <!-- <input name="pricegoods" style="text-align: center;" id="pricegoods" type="text"
+                                        class="form-control currency" min="0" placeholder="10,000" value=""> -->
+                                    <input name="pricegoods" id="pricegoods" type="text"
+                                    class="form-control" placeholder="10,000" value="">
                                 </div>
                             </div>
                         </div>
@@ -204,6 +206,52 @@ include "../import.php"; ?>
 
 
 <script>
+
+    // put separator in harga barang
+    var hargabarang = document.getElementById('pricegoods');
+
+    hargabarang.addEventListener('keydown', function (e) {
+      // Allow only numeric characters, backspace, and delete key
+      if (!/[\d\b]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && !/^Arrow/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+
+    hargabarang.addEventListener('input', function (e) {
+      // Remove any non-digit characters
+      var value = e.target.value.replace(/\D/g, '');
+
+      // Format the number with commas as thousands separators
+      var formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+      // Set the input value to the formatted number
+      e.target.value = formatted;
+    });
+
+    // put separator in stok barang
+    var stokbarang = document.getElementById('stockgoods');
+
+    stokbarang.addEventListener('keydown', function (e) {
+      // Allow only numeric characters, backspace, and delete key
+      if (!/[\d\b]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && !/^Arrow/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+
+    stokbarang.addEventListener('input', function (e) {
+      // Remove any non-digit characters
+      var value = e.target.value.replace(/\D/g, '');
+
+      // Format the number with commas as thousands separators
+      var formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+      // Set the input value to the formatted number
+      e.target.value = formatted;
+    });
+
+
+
+    
 
     // $('#savebarangbutton').click(function(){
     //     var namegoods = $("#namegoods").val();
